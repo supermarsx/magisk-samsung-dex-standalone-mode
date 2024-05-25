@@ -1,0 +1,7 @@
+id=samsung-dex-standalone-mode
+name=Samsung DeX standalone mode
+version=2024.1
+versionCode=1
+author=supermarsx
+description=Patch `floating_feature.xml` to enable Samsung Dex standalone mode, available on devices supporting at least one Dex mode.
+updateJson=https://raw.githubusercontent.com/supermarsx/magisk-samsung-dex-standalone-mode/main/update.json
