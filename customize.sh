@@ -129,7 +129,7 @@ install_cancel() {
 # install_exists()
 #   Check if a previous module installation exists
 install_exists() {
-    local filepath=$floating_feature_xml_patched_path
+    local filepath="$floating_feature_xml_patched_path"
 
     if filepath_exists "$filepath"; then
         ui_print " [WARN] Module is already installed."
