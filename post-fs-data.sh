@@ -251,9 +251,9 @@ mount_file() {
 #   Set module status through description
 module_set_status() {
     if [ "$error_count" -gt 0 ]; then
-        module_set_message "$(printf '\u274C') [WARN/ERROR] - Failed with $error_count error(s): $error_message"
+        module_set_message "⚠️❗ [WARN/ERROR] - Failed with $error_count error(s): $error_message"
     else
-        module_set_message "$(printf '\u2705') [OK] - Samsung DeX standalone mode set"
+        module_set_message "✅ [OK] - Samsung DeX standalone mode set"
     fi
 }
 
