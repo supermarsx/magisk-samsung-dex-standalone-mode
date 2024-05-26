@@ -162,7 +162,7 @@ file_set_property_direct() {
     local value="$3"
     
     echo " [INFO] Setting file '$filepath' property '$property' value '$value' directly now."
-    if sed -i -E "s/${property}=/&$value/" "$filepath"
+    if sed -i -E "s/$property=/&$value/" "$filepath"
     then
         echo " [INFO] File property was set successfully."
     else
@@ -233,7 +233,7 @@ file_remove_xml_key_value() {
     local value="$3"
 
     echo " [INFO] Removing value '$value' from xml file '$filepath' key '$key'."
-    if sed -i -E "/<$key>/s/,? *${value}//g" "$filepath"
+    if sed -i -E "/<$key>/s/,? *$value//g" "$filepath"
     then
         echo " [INFO] Removed value from xml key successfully."
         return 0
@@ -309,15 +309,15 @@ file_set_xml_key() {
 
     echo " [INFO] Patching xml file key '$key'."
     if filepath_exists "$original_filepath"; then
-        file_remove_xml_key_value "$original_filepath" "$key" "$value"
-        if file_add_xml_key_value "$original_filepath" "$key" "$value"; then
-            file_remove_xml_key_commas "$original_filepath" "$key"
-            if file_copy "$original_filepath" "$patched_filepath"; then
+        if file_copy "$original_filepath" "$patched_filepath"; then
+            file_remove_xml_key_value "$patched_filepath" "$key" "$value"
+            if file_add_xml_key_value "$patched_filepath" "$key" "$value"; then
+                file_remove_xml_key_commas "$original_filepath" "$key"
                 echo " [INFO] Patched xml file successfully."
                 return 0
             else
                 echo " [ERR!] Failed patching xml file key '$key'."
-                return 1
+                return 1   
             fi
         else
             return 0
@@ -406,7 +406,7 @@ post_fs_process() {
     module_set_message ""
     if file_set_xml_key "$original_filepath" "$patched_filepath" "$key" "$value"; then
         set_permissions "$patched_filepath"
-        mount_file "$original_filepath" "$patched_filepath"
+        mount_file "$patched_filepath" "$original_filepath"
     fi
     
     module_set_status
