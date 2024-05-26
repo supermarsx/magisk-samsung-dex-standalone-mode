@@ -118,7 +118,8 @@ file_clear_property() {
     local property="$2"
 
     echo " [INFO] Clearing file '$filepath' property '$property'."
-    if sed -i -E "s/${property}=(\[.+\] )?/${property}=/" "$filepath"; then
+    if sed -i -E "s/${property}=(\[.+\] )?/${property}=/" "$filepath"
+    then
         echo " [INFO] File property clearing was successful."
     else
         error_add "sed.clearprop"
@@ -161,7 +162,8 @@ file_set_property_direct() {
     local value="$3"
     
     echo " [INFO] Setting file '$filepath' property '$property' value '$value' directly now."
-    if sed -i -E "s/${property}=/&$value/" "$filepath"; then
+    if sed -i -E "s/${property}=/&$value/" "$filepath"
+    then
         echo " [INFO] File property was set successfully."
     else
         error_add "sed.setprop"
@@ -231,7 +233,8 @@ file_remove_xml_key_value() {
     local value="$3"
 
     echo " [INFO] Removing value '$value' from xml file '$filepath' key '$key'."
-    if sed -i -E "/<$key>/s/,? *${value}//g" "$filepath"; then
+    if sed -i -E "/<$key>/s/,? *${value}//g" "$filepath"
+    then
         echo " [INFO] Removed value from xml key successfully."
         return 0
     else
@@ -255,7 +258,8 @@ file_add_xml_key_value() {
     local value="$3"
 
     echo " [INFO] Adding value '$value' to xml file '$filepath' key '$key'."
-    if sed -i -E "/<$key>/s/<$key>(.*)<\/$key>/<$key>\1,$value<\/$key>/" "$filepath"; then
+    if sed -i -E "/<$key>/s/<$key>(.*)<\/$key>/<$key>\1,$value<\/$key>/" "$filepath"
+    then
         echo " [INFO] Added value to xml key successfully."
         return 0
     else
@@ -278,7 +282,8 @@ file_remove_xml_key_commas() {
     local value="$3"
 
     echo " [INFO] Removing leading commas from value '$value' in xml file '$filepath' key '$key'."
-    if sed -i -E "/<$key>/s/<$key>(.*)<\/$key>/<$key>\1,$value<\/$key>/" "$filepath"; then
+    if sed -i -E "/<$key>/s/<$key>(.*)<\/$key>/<$key>\1,$value<\/$key>/" "$filepath"
+    then
         echo " [INFO] Removed leading commas successfully."
         return 0
     else
