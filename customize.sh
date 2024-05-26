@@ -1,5 +1,4 @@
-#!/data/adb/magisk/busybox ash
-# shellcheck shell=dash
+#!/system/bin/sh
 
 #
 # *********************************
@@ -35,13 +34,13 @@ set_permissions() {
 # $parameters
 #   filepath - Path to file, full or relative
 filepath_exists() {
-    local filepath="$1"
+    fpe_filepath="$1"
 
-    if [ -e "$filepath" ]; then
-        ui_print " [INFO] File path exists: $filepath"
+    if [ -e "$fpe_filepath" ]; then
+        ui_print " [INFO] File path exists '$fpe_filepath'."
         return 0
     else
-        ui_print " [INFO] File path doesn't exist: $filepath"
+        ui_print " [INFO] File path doesn't exist: '$fpe_filepath'."
         return 1
     fi
 }
@@ -54,14 +53,14 @@ filepath_exists() {
 #   filepath - Path to file, full or relative
 #   key - Key to look for inside file
 file_key_exists() {
-    local filepath="$1"
-    local key="$2"
+    fke_filepath="$1"
+    fke_key="$2"
 
-    if grep -q "$key" "$filepath"; then
-        ui_print " [INFO] Key '$key' exists inside '$filepath'"
+    if grep -q "$fke_key" "$fke_filepath"; then
+        ui_print " [INFO] Key '$fke_key' exists inside '$fke_filepath'."
         return 0
     else
-        ui_print " [INFO] Key '$key' doesn't exist inside '$filepath'"
+        ui_print " [INFO] Key '$fke_key' doesn't exist inside '$fke_filepath'."
         return 1
     fi
 }
@@ -75,16 +74,16 @@ file_key_exists() {
 #   key - Key to check for value
 #   value - Value/Partial string to search in key value
 file_key_contains_value() {
-    local filepath="$1"
-    local key="$2"
-    local value="$3"
+    fkcv_filepath="$1"
+    fkcv_key="$2"
+    fkcv_value="$3"
 
     # shellcheck disable=SC1087
-    if grep -q "<$key[^>]*>.*$value.*</$key>" "$filepath"; then
-        ui_print " [INFO] Key '$key' contains '$value' inside '$filepath'"
+    if grep -q "<$fkcv_key[^>]*>.*$fkcv_value.*</$fkcv_key>" "$fkcv_filepath"; then
+        ui_print " [INFO] Key '$fkcv_key' contains '$fkcv_value' inside '$fkcv_filepath'."
         return 0
     else
-        ui_print " [INFO] Key '$key' doesn't contain '$value' inside '$filepath'"
+        ui_print " [INFO] Key '$fkcv_key' doesn't contain '$fkcv_value' inside '$fkcv_filepath'."
         return 1
     fi
 }
@@ -99,14 +98,14 @@ module_remove_mark() {
 # install_welcome()
 #   Installation welcome message
 install_welcome() {
-    local file="$floating_feature_xml_file"
+    iw_file="$floating_feature_xml_file"
 
     ui_print
     ui_print " *******************************"
     ui_print " * samsung-dex-standalone-mode *"
     ui_print " *******************************"
     ui_print
-    ui_print " * Systemlessly patch $file"
+    ui_print " * Systemlessly patch $iw_file"
     ui_print " * every boot to enable Samsung DeX standalone mode."
     ui_print
     ui_print " [INFO] Starting Installation."
@@ -115,9 +114,9 @@ install_welcome() {
 # install_done()
 #   Finish/Wrap up the installation script process
 install_done() {
-    local file="$floating_feature_xml_file"
+    id_file="$floating_feature_xml_file"
 
-    ui_print " [INFO] $file will be patched every boot."
+    ui_print " [INFO] $id_file will be patched every boot."
     ui_print " [INFO] Installation finished successfully."
     exit 0
 }
@@ -133,9 +132,9 @@ install_cancel() {
 # install_exists()
 #   Check if a previous module installation exists
 install_exists() {
-    local filepath="$floating_feature_xml_patched_fullpath"
+    ie_filepath="$floating_feature_xml_patched_fullpath"
 
-    if filepath_exists "$filepath"; then
+    if filepath_exists "$ie_filepath"; then
         ui_print " [WARN] Module is already installed."
         ui_print " [INFO] Going for *upgrade*."
         ui_print " [INFO] Skipping installation checks."
@@ -149,9 +148,9 @@ install_exists() {
 # floating_feature_file_exists()
 #   Check if floating feature file exists
 floating_feature_file_exists() {
-    local filepath="$floating_feature_xml_fullpath"
+    fffe_filepath="$floating_feature_xml_fullpath"
 
-    if filepath_exists "$filepath"; then
+    if filepath_exists "$fffe_filepath"; then
         ui_print " [INFO] Passed floating features file exists."
     else
         ui_print " [ERR!] Failed floating features file exists."
@@ -163,10 +162,10 @@ floating_feature_file_exists() {
 # floating_feature_file_key_exists()
 #   Check if floating feature file key exists
 floating_feature_file_key_exists() {
-    local filepath="$floating_feature_xml_fullpath"
-    local key="$floating_feature_xml_dex_key"
+    fffke_filepath="$floating_feature_xml_fullpath"
+    fffke_key="$floating_feature_xml_dex_key"
 
-    if file_key_exists "$filepath" "$key"; then
+    if file_key_exists "$fffke_filepath" "$fffke_key"; then
         ui_print " [INFO] Passed floating feature key check."
     else
         ui_print " [ERR!] Failed floating features key check."
@@ -178,11 +177,11 @@ floating_feature_file_key_exists() {
 # floating_feature_already_enabled()
 #   Check if floating feature has standalone already enabled
 floating_feature_already_enabled() {
-    local filepath="$floating_feature_xml_fullpath"
-    local key="$floating_feature_xml_dex_key"
-    local value="$floating_feature_xml_dex_key_value"
+    ffae_filepath="$floating_feature_xml_fullpath"
+    ffae_key="$floating_feature_xml_dex_key"
+    ffae_value="$floating_feature_xml_dex_key_value"
 
-    if file_key_contains_value "$filepath" "$key" "$value"; then
+    if file_key_contains_value "$ffae_filepath" "$ffae_key" "$ffae_value"; then
         ui_print " [ERR!] Failed floating features key value check."
         ui_print " [INFO] Floating features has DeX standalone mode already enabled."
         install_cancel

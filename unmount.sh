@@ -1,11 +1,7 @@
-#!/data/adb/magisk/busybox ash
-# shellcheck shell=dash
+#!/system/bin/sh
 
-# Installation variables
-module_name="samsung-dex-standalone-mode"
-module_path="/data/adb/modules"
+# Unmount variables
 floating_feature_xml_patched_file="floating_feature.xml.patched"
-floating_feature_xml_patched_fullpath="$module_path/$module_name/$floating_feature_xml_patched_file"
 
 # unmount_file()
 #   Unmount target
@@ -14,10 +10,10 @@ floating_feature_xml_patched_fullpath="$module_path/$module_name/$floating_featu
 # parameters
 #   destination_path - Destination file path
 unmount_file() {
-    local destination_path="$2"
+    uf_destination_path="$2"
 
     echo " [INFO] Unmounting."
-    if umount "$destination_path"; then
+    if umount "$uf_destination_path"; then
         echo " [INFO] Unmount was successful."
     else
         error_add "mount.bind"
@@ -28,8 +24,8 @@ unmount_file() {
 # process_unmount()
 #   Process unmount
 process_unmount() {
-    local unmount_target="$floating_feature_xml_patched_fullpath"
-    unmount_file "$unmount_target"
+    pu_unmount_target="$floating_feature_xml_patched_file"
+    unmount_file "$pu_unmount_target"
 }
 
 process_unmount

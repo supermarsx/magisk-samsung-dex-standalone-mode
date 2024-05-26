@@ -1,24 +1,27 @@
-#!/data/adb/magisk/busybox ash
-# shellcheck shell=dash
+#!/system/bin/sh
 
 # General variables
-module_dir=${0%/*}
+module_name="samsung-dex-standalone-mode"
+module_dir="/data/adb/modules/$module_name/"
+module_log_file="post-fs-data.log"
+module_log_file_fullpath="$module_dir$module_log_file"
 module_prop_file="module.prop"
-module_prop_fullpath="$module_dir/$module_prop_file"
+module_prop_fullpath="$module_dir$module_prop_file"
 floating_feature_xml_file="floating_feature.xml"
 floating_feature_xml_dir="/system/etc/"
 floating_feature_xml_fullpath="$floating_feature_xml_dir$floating_feature_xml_file"
-floating_feature_xml_dex_key="<SEC_FLOATING_FEATURE_COMMON_CONFIG_DEX_MODE>"
+floating_feature_xml_dex_key="SEC_FLOATING_FEATURE_COMMON_CONFIG_DEX_MODE"
 floating_feature_xml_dex_key_value="standalone"
 floating_feature_xml_patched_file="floating_feature.xml.patched"
-floating_feature_xml_patched_fullpath="$module_dir/$floating_feature_xml_patched_file"
+floating_feature_xml_patched_fullpath="$module_dir$floating_feature_xml_patched_file"
 error_count=0
 error_message=""
+logfile="$module_log_file_fullpath"
 
 # error_count_up()
 #   Increase error count
 increment_error_count() {
-    echo " [INFO] Incrementing error by 1."
+    echo " [INFO] Incrementing error by 1." >> "$logfile"
     error_count="$((error_count+1))"
 }
 
@@ -29,10 +32,10 @@ increment_error_count() {
 # $parameters
 #   value - Message to add to error messages
 error_message_append() {
-    local value="$1"
+    ema_value="$1"
 
-    echo " [INFO] Appending new error with '$value'."
-    error_message="$error_message$value failed;"
+    echo " [INFO] Appending new error with '$ema_value'." >> "$logfile"
+    error_message="$error_message$ema_value failed;"
 }
 
 # error_add()
@@ -42,11 +45,11 @@ error_message_append() {
 # $parameters
 #   value - Error message to add to current errors
 error_add() {
-    local value="$1"
+    ea_value="$1"
 
-    echo " [ERR!] Operation failed: $value"
+    echo " [ERR!] Operation failed: $ea_value" >> "$logfile"
     increment_error_count
-    error_message_append "$value"
+    error_message_append "$ea_value"
 }
 
 # is_empty()
@@ -56,9 +59,9 @@ error_add() {
 # $parameters
 #   value - Value to check if it is considered empty
 is_empty() {
-    local value="$1"
+    ie_value="$1"
 
-    if [ -n "$value" ]; then
+    if [ -n "$ie_value" ]; then
         return 0
     else
         return 1
@@ -73,15 +76,15 @@ is_empty() {
 #   source_path - Source file path
 #   destination_path - Destination file path
 file_copy() {
-    local source_path="$1"
-    local destination_path="$2"
+    fc_source_path="$1"
+    fc_destination_path="$2"
 
-    echo " [INFO] Copying file '$source_path' to '$destination_path'." 
-    if cp "$source_path" "$destination_path"; then
-        echo " [INFO] File was copied successfully."
+    echo " [INFO] Copying file '$fc_source_path' to '$fc_destination_path'." >> "$logfile"
+    if cp "$fc_source_path" "$fc_destination_path"; then
+        echo " [INFO] File was copied successfully." >> "$logfile"
         return 0
     else
-        echo " [ERR!] Failed to copy file."
+        echo " [ERR!] Failed to copy file." >> "$logfile"
         error_add "cp"
         return 1
     fi
@@ -94,14 +97,14 @@ file_copy() {
 # $parameters
 #   filepath - Path to file, full or relative
 filepath_exists() {
-    local filepath="$1"
+    fe_filepath="$1"
 
-    echo " [INFO] Checking if file path exists: '$filepath'."
-    if [ -e "$filepath" ]; then
-        echo " [INFO] File exists."
+    echo " [INFO] Checking if file path exists: '$fe_filepath'." >> "$logfile"
+    if [ -e "$fe_filepath" ]; then
+        echo " [INFO] File exists." >> "$logfile"
         return 0
     else
-        echo " [INFO] File doesn't exist."
+        echo " [INFO] File doesn't exist." >> "$logfile"
         return 1
     fi
 }
@@ -114,16 +117,16 @@ filepath_exists() {
 #   filepath - Path to file
 #   property - Property to clear
 file_clear_property() {
-    local filepath="$1"
-    local property="$2"
+    fcp_filepath="$1"
+    fcp_property="$2"
 
-    echo " [INFO] Clearing file '$filepath' property '$property'."
-    if sed -i -E "s/${property}=(\[.+\] )?/${property}=/" "$filepath"
+    echo " [INFO] Clearing file '$fcp_filepath' property '$fcp_property'." >> "$logfile"
+    if sed -i -E "s/${fcp_property}=(\[.+\] )?/${fcp_property}=/" "$fcp_filepath" >> "$logfile"
     then
-        echo " [INFO] File property clearing was successful."
+        echo " [INFO] File property clearing was successful." >> "$logfile"
     else
         error_add "sed.clearprop"
-        echo " [ERR!] File property clearing failed."
+        echo " [ERR!] File property clearing failed." >> "$logfile"
     fi
 }
 
@@ -135,15 +138,15 @@ file_clear_property() {
 #   filepath - Path to file
 #   property - Property to check
 file_is_property_clean() {
-    local filepath="$1"
-    local property="$2"
+    fipc_filepath="$1"
+    fipc_property="$2"
 
-    echo " [INFO] Checking if file '$filepath' property '$property' is cleared."
-    if grep -q "${property}=" "$filepath"; then
-        echo " [INFO] File property is cleared."
+    echo " [INFO] Checking if file '$fipc_filepath' property '$fipc_property' is cleared." >> "$logfile"
+    if grep -q "${fipc_property}=" "$fipc_filepath"; then
+        echo " [INFO] File property is clear." >> "$logfile"
         return 0
     else
-        echo " [INFO] File property isn't cleared."
+        echo " [INFO] File property isn't cleared." >> "$logfile"
         return 1
     fi
 }
@@ -157,17 +160,17 @@ file_is_property_clean() {
 #   property - Property to change
 #   value - Value to set property to
 file_set_property_direct() {
-    local filepath="$1"
-    local property="$2"
-    local value="$3"
+    fspd_filepath="$1"
+    fspd_property="$2"
+    fspd_value="$3"
     
-    echo " [INFO] Setting file '$filepath' property '$property' value '$value' directly now."
-    if sed -i -E "s/$property=/&$value/" "$filepath"
+    echo " [INFO] Setting file '$fspd_filepath' property '$fspd_property' value '$fspd_value' directly now." >> "$logfile"
+    if sed -i -E "s/$fspd_property=/&$fspd_value/" "$fspd_filepath"
     then
-        echo " [INFO] File property was set successfully."
+        echo " [INFO] File property was set successfully." >> "$logfile"
     else
         error_add "sed.setprop"
-        echo " [ERR!] File property set failed."
+        echo " [ERR!] File property set failed." >> "$logfile"
     fi
 }
 
@@ -180,19 +183,19 @@ file_set_property_direct() {
 #   property - Property to change
 #   value - Value to set property to
 file_set_property() {
-    local filepath="$1"
-    local property="$2"
-    local value="$3"
+    fsp_filepath="$1"
+    fsp_property="$2"
+    fsp_value="$3"
 
-    echo " [INFO] Setting file '$filepath' property '$property' value '$value'."
-    if filepath_exists "$filepath"; then
-        file_clear_property "$filepath" "$property"
-        if file_is_property_clean "$filepath" "$property"; then
-            if is_empty "$value"; then
-                file_set_property_direct "$filepath" "$property" "$value"
+    echo " [INFO] Setting file '$fsp_filepath' property '$fsp_property' value '$fsp_value'." >> "$logfile"
+    if filepath_exists "$fsp_filepath"; then
+        file_clear_property "$fsp_filepath" "$fsp_property"
+        if file_is_property_clean "$fsp_filepath" "$fsp_property"; then
+            if is_empty "$fsp_value"; then
+                file_set_property_direct "$fsp_filepath" "$fsp_property" "$fsp_value"
                 return 0
             else
-                echo " [INFO] No value was set due to parameters."
+                echo " [INFO] No value was set due to parameters." >> "$logfile"
                 return 0
             fi
         else
@@ -200,7 +203,7 @@ file_set_property() {
         fi
     else
         error_add "fileexists"
-        echo " [ERR!] File '$filepath' doesn't exist."
+        echo " [ERR!] File '$fsp_filepath' doesn't exist." >> "$logfile"
         return 1
     fi
 }
@@ -212,11 +215,11 @@ file_set_property() {
 # $parameters
 #   value - message to set prop to
 module_set_message() {
-    local filepath="$module_prop_fullpath"
-    local property="description"
-    local value="$1"
+    msm_filepath="$module_prop_fullpath"
+    msm_property="description"
+    msm_value="$1"
 
-    file_set_property "$filepath" "$property" "$value"
+    file_set_property "$msm_filepath" "$msm_property" "$msm_value"
 }
 
 # file_remove_xml_key_value()
@@ -228,18 +231,18 @@ module_set_message() {
 #   key - Key
 #   value - Value to remove from key
 file_remove_xml_key_value() {
-    local filepath="$1"
-    local key="$2"
-    local value="$3"
+    frxkv_filepath="$1"
+    frxkv_key="$2"
+    frxkv_value="$3"
 
-    echo " [INFO] Removing value '$value' from xml file '$filepath' key '$key'."
-    if sed -i -E "/<$key>/s/,? *$value//g" "$filepath"
+    echo " [INFO] Removing value '$frxkv_value' from xml file '$frxkv_filepath' key '$frxkv_key'." >> "$logfile"
+    if sed -i -E "/<$frxkv_key>/s/,? *$frxkv_value//g" "$frxkv_filepath"
     then
-        echo " [INFO] Removed value from xml key successfully."
+        echo " [INFO] Removed value from xml key successfully." >> "$logfile"
         return 0
     else
         error_add "sed.removexmlkeyvalue"
-        echo " [ERR!] Failed to remove value from xml key."
+        echo " [ERR!] Failed to remove value from xml key." >> "$logfile"
         return 1
     fi
 }
@@ -253,43 +256,40 @@ file_remove_xml_key_value() {
 #   key - Key to set
 #   value - Value to add to key
 file_add_xml_key_value() {
-    local filepath="$1"
-    local key="$2"
-    local value="$3"
+    faxkv_filepath="$1"
+    faxkv_key="$2"
+    faxkv_value="$3"
 
-    echo " [INFO] Adding value '$value' to xml file '$filepath' key '$key'."
-    if sed -i -E "/<$key>/s/<$key>(.*)<\/$key>/<$key>\1,$value<\/$key>/" "$filepath"
+    echo " [INFO] Adding value '$faxkv_value' to xml file '$faxkv_filepath' key '$faxkv_key'." >> "$logfile"
+    if sed -i -E "/<$faxkv_key>/s/<$faxkv_key>(.*)<\/$faxkv_key>/<$faxkv_key>\1,$faxkv_value<\/$faxkv_key>/" "$faxkv_filepath"
     then
-        echo " [INFO] Added value to xml key successfully."
+        echo " [INFO] Added value to xml key successfully." >> "$logfile"
         return 0
     else
         error_add "sed.addxmlkeyvalue"
-        echo " [ERR!] Failed to add value to xml key."
+        echo " [ERR!] Failed to add value to xml key." >> "$logfile"
         return 1
     fi
 }
 
 # file_remove_xml_key_commas()
-#   Remove leading commas from key value of a given xml file
+#   Remove extra commas from key value of a given xml file
 #
 # %usage: file_remove_xml_key_commas filepath key
 # $parameters
 #   filepath - Xml file path
-#   key - Key to remove leading commas from
+#   key - Key to remove extra commas from
 file_remove_xml_key_commas() {
-    local filepath="$1"
-    local key="$2"
-    local value="$3"
+    frxkc_filepath="$1"
+    frxkc_key="$2"
 
-    echo " [INFO] Removing leading commas from value '$value' in xml file '$filepath' key '$key'."
-    if sed -i -E "/<$key>/s/<$key>(.*)<\/$key>/<$key>\1,$value<\/$key>/" "$filepath"
-    then
-        echo " [INFO] Removed leading commas successfully."
-        return 0
+    echo " [INFO] Removing trailing commas from value in xml file '$frxkc_filepath' key '$frxkc_key'." >> "$logfile"
+    if sed -i -E "/<$frxkc_key>/s/,(<\/$frxkc_key>)/\1/" "$frxkc_filepath"; then
+        echo " [INFO] Removed trailing commas successfully." >> "$logfile"
     else
-        echo " [WARN] No leading commas found or command failed."
-        return 0
+        echo " [WARN] No trailing commas found or command failed." >> "$logfile"
     fi
+    return 0
 }
 
 # file_set_xml_key()
@@ -302,21 +302,21 @@ file_remove_xml_key_commas() {
 #   key - Key to set
 #   value - Value to set key to/add to
 file_set_xml_key() {
-    local original_filepath="$1"
-    local patched_filepath="$2"
-    local key="$3"
-    local value="$4"
+    fsxk_original_filepath="$1"
+    fsxk_patched_filepath="$2"
+    fsxk_key="$3"
+    fsxk_value="$4"
 
-    echo " [INFO] Patching xml file key '$key'."
-    if filepath_exists "$original_filepath"; then
-        if file_copy "$original_filepath" "$patched_filepath"; then
-            file_remove_xml_key_value "$patched_filepath" "$key" "$value"
-            if file_add_xml_key_value "$patched_filepath" "$key" "$value"; then
-                file_remove_xml_key_commas "$original_filepath" "$key"
-                echo " [INFO] Patched xml file successfully."
+    echo " [INFO] Patching xml file key '$fsxk_key'." >> "$logfile"
+    if filepath_exists "$fsxk_original_filepath"; then
+        if file_copy "$fsxk_original_filepath" "$fsxk_patched_filepath"; then
+            #file_remove_xml_key_value "$fsxk_patched_filepath" "$fsxk_key" "$fsxk_value"
+            if file_add_xml_key_value "$fsxk_patched_filepath" "$fsxk_key" "$fsxk_value"; then
+                file_remove_xml_key_commas "$fsxk_patched_filepath" "$fsxk_key"
+                echo " [INFO] Patched xml file successfully." >> "$logfile"
                 return 0
             else
-                echo " [ERR!] Failed patching xml file key '$key'."
+                echo " [ERR!] Failed patching xml file key '$fsxk_key'." >> "$logfile"
                 return 1   
             fi
         else
@@ -324,7 +324,7 @@ file_set_xml_key() {
         fi
     else
         error_add "fileexists"
-        echo " [ERR!] File '$original_filepath' doesn't exist."
+        echo " [ERR!] File '$fsxk_original_filepath' doesn't exist." >> "$logfile"
         return 1
     fi
 }
@@ -336,31 +336,31 @@ file_set_xml_key() {
 # $parameters
 #   filepath - File path to set permissions
 set_permissions() {
-    local filepath="$1"
+    sp_filepath="$1"
 
-    echo " [INFO] Setting permissions."
-    echo " [INFO] Changing file owner, '$filepath'"
-    if chown root:root "$filepath"; then
-        echo " [INFO] Changed file owner successfully."
+    echo " [INFO] Setting permissions." >> "$logfile"
+    echo " [INFO] Changing file owner, '$sp_filepath'" >> "$logfile"
+    if chown root:root "$sp_filepath"; then
+        echo " [INFO] Changed file owner successfully." >> "$logfile"
     else
         error_add "chown"
-        echo " [ERR!] Failed to change file owner."
+        echo " [ERR!] Failed to change file owner." >> "$logfile"
     fi
 
-    echo " [INFO] Setting file permissions."
-    if chmod 0644 "$filepath"; then
-        echo " [INFO] Change file permissions successfully."
+    echo " [INFO] Setting file permissions." >> "$logfile"
+    if chmod 0644 "$sp_filepath"; then
+        echo " [INFO] Change file permissions successfully." >> "$logfile"
     else
         error_add "chmod"
-        echo " [ERR!] Failed to change file permissions."
+        echo " [ERR!] Failed to change file permissions." >> "$logfile"
     fi
     
-    echo " [INFO] Setting security context."
-    if chcon -v u:object_r:system_file:s0 "$filepath"; then
-        echo " [INFO] Security context set successfully."
+    echo " [INFO] Setting security context." >> "$logfile"
+    if chcon -v u:object_r:system_file:s0 "$sp_filepath"; then
+        echo " [INFO] Security context set successfully." >> "$logfile"
     else
         error_add "chcon"
-        echo " [ERR!] Failed to change security context."
+        echo " [ERR!] Failed to change security context." >> "$logfile"
     fi
 } 
 
@@ -372,15 +372,15 @@ set_permissions() {
 #   source_path - Source file path
 #   destination_path - Destination file path
 mount_file() {
-    local source_path="$1"
-    local destination_path="$2"
+    mf_source_path="$1"
+    mf_destination_path="$2"
 
-    echo " [INFO] Mount binding file."
-    if mount -o bind "$destination_path" "$source_path"; then
-        echo " [INFO] Mount bind was successful."
+    echo " [INFO] Mount binding file." >> "$logfile"
+    if mount -o bind "$mf_source_path" "$mf_destination_path"; then
+        echo " [INFO] Mount bind was successful." >> "$logfile"
     else
         error_add "mount.bind"
-        echo " [ERR!] Mount bind failed."
+        echo " [ERR!] Mount bind failed." >> "$logfile"
     fi
 }
 
@@ -389,27 +389,30 @@ mount_file() {
 module_set_status() {
     echo " [INFO] Setting module status."
     if [ "$error_count" -gt 0 ]; then
-        module_set_message "⚠️❗ [WARN/ERROR] - Failed to set mode with ($error_count) error(s): $error_message"
+        module_set_message "⚠️❗ [WARN/ERROR] - Failed to set standalone mode with ($error_count) error(s): $error_message ||| "
     else
-        module_set_message "✅ [OK] - Samsung DeX standalone mode set"
+        module_set_message "✅ [OK] - Samsung DeX standalone mode set ||| "
     fi
 }
 
 # post_fs_process()
 #   Post fs synchronous process at boot (main/entry)
 post_fs_process() {
-    local original_filepath="$floating_feature_xml_fullpath"
-    local patched_filepath="$floating_feature_xml_patched_fullpath"
-    local key="$floating_feature_xml_dex_key"
-    local value="$floating_feature_xml_dex_key_value"
+    pfp_original_filepath="$floating_feature_xml_fullpath"
+    pfp_patched_filepath="$floating_feature_xml_patched_fullpath"
+    pfp_key="$floating_feature_xml_dex_key"
+    pfp_value="$floating_feature_xml_dex_key_value"
+
+    echo " [INFO] Starting patching process" > "$logfile"
 
     module_set_message ""
-    if file_set_xml_key "$original_filepath" "$patched_filepath" "$key" "$value"; then
-        set_permissions "$patched_filepath"
-        mount_file "$patched_filepath" "$original_filepath"
+    if file_set_xml_key "$pfp_original_filepath" "$pfp_patched_filepath" "$pfp_key" "$pfp_value"; then
+        set_permissions "$pfp_patched_filepath"
+        mount_file "$pfp_patched_filepath" "$pfp_original_filepath"
     fi
     
     module_set_status
+    echo " [INFO] Finished patching process" >> "$logfile"
 }
 
 post_fs_process
