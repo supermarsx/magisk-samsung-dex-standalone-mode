@@ -3,6 +3,7 @@
 Magisk module to systemlessly enable Samsung DeX standalone mode by patching `floating_feature.xml`, adds `standalone` value to the key `<SEC_FLOATING_FEATURE_COMMON_CONFIG_DEX_MODE>`.
 
 ✅ Enables DeX standalone mode on supported phones.
+
 ✅ Compatible with `magisk` and `kernelsu`.
 
 [![Made with brain](https://img.shields.io/badge/Made%20with-brain%E2%84%A2-orange.svg?style=flat-square)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
@@ -24,7 +25,9 @@ Magisk module to systemlessly enable Samsung DeX standalone mode by patching `fl
 Build related:
 
 `create-module.bat` - Generates a new module ZIP for installation
+
 `filelist.txt` - File and folder list to include in a new module ZIP
+
 `delete-module.bat` - Delete module ZIP from folder
 
 Testing related:
@@ -34,6 +37,7 @@ Testing related:
 Debugging related:
 
 Every boot `post-fs-data.log` log file is generated with debugging information, if there was another already there it's overwritten.
+
 Check `floating_feature.xml` values by using `su` and `cat /system/etc/floating_feature.xml`
 
 
