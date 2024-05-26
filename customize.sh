@@ -1,3 +1,6 @@
+#!/data/adb/magisk/busybox ash
+# shellcheck shell=dash
+
 #
 # *********************************
 # *  samsung-dex-standalone-mode  *
@@ -20,7 +23,7 @@ floating_feature_xml_patched_fullpath="$MODPATH/$floating_feature_xml_patched_fi
 #   Set base permissions
 set_permissions() {
     # Set base permissions to module path, owner is rw, others are read
-    set_perm_recursive $module_path 0 0 0755 0755
+    set_perm_recursive "$module_path" 0 0 0755 0755
     ui_print " [INFO] Module path permissions set 0755."
 }
 
@@ -33,7 +36,7 @@ set_permissions() {
 filepath_exists() {
     local filepath="$1"
 
-    if [[ -e "$filepath"]]; then
+    if [ -e "$filepath" ]; then
         ui_print " [INFO] File path exists: $filepath"
         return 0
     else
@@ -75,6 +78,7 @@ file_key_contains_value() {
     local key="$2"
     local value="$3"
 
+    # shellcheck disable=SC1087
     if grep -q "<$key[^>]*>.*$value.*</$key>" "$filepath"; then
         ui_print " [INFO] Key '$key' contains '$value' inside '$filepath'"
         return 0
@@ -87,7 +91,7 @@ file_key_contains_value() {
 # module_remove_mark()
 #   Mark module for removal
 module_remove_mark() {
-    touch $MODPATH/remove
+    touch "$MODPATH/remove"
     ui_print " [INFO] Marked module for removal."
 }
 
@@ -129,7 +133,7 @@ install_cancel() {
 # install_exists()
 #   Check if a previous module installation exists
 install_exists() {
-    local filepath="$floating_feature_xml_patched_path"
+    local filepath="$floating_feature_xml_patched_fullpath"
 
     if filepath_exists "$filepath"; then
         ui_print " [WARN] Module is already installed."

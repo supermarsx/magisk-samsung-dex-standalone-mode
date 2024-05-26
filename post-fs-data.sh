@@ -1,4 +1,5 @@
-#!/system/bin/sh
+#!/data/adb/magisk/busybox ash
+# shellcheck shell=dash
 
 # General variables
 module_dir=${0%/*}
@@ -17,7 +18,7 @@ error_message=""
 # error_count_up()
 #   Increase error count
 increment_error_count() {
-    ((error_count++))
+    error_count="$((error_count+1))"
 }
 
 # error_message_append()
@@ -29,7 +30,7 @@ increment_error_count() {
 error_message_append() {
     local value="$1"
 
-    error_message+="$value failed;"
+    error_message="$error_message$value failed;"
 }
 
 # error_add()
@@ -68,7 +69,7 @@ file_copy() {
 filepath_exists() {
     local filepath="$1"
 
-    if [[ -e "$filepath"]]; then
+    if [ -e "$filepath" ]; then
         return 0
     else
         return 1
@@ -121,9 +122,9 @@ file_set_property() {
     local value="$3"
 
     if filepath_exists "$filepath"; then
-        file_clear_property
+        file_clear_property "$filepath" "$property"
         if file_is_property_clean "$filepath" "$property"; then
-            if [[ -n "$value" ]]; then
+            if [ -n "$value" ]; then
                 sed -i -E "s/${property}=/&$value/" "$filepath"
             fi
         fi
@@ -249,10 +250,10 @@ mount_file() {
 # module_set_status()
 #   Set module status through description
 module_set_status() {
-    if ["$error_count" -gt 0]; then
-        module_set_message "⚠️/❌ [WARN/ERROR] - Failed with $error_count error(s): $error_message"
+    if [ "$error_count" -gt 0 ]; then
+        module_set_message "$(printf '\u274C') [WARN/ERROR] - Failed with $error_count error(s): $error_message"
     else
-        module_set_message "✅ [OK] - Standalone mode set"
+        module_set_message "$(printf '\u2705') [OK] - Samsung DeX standalone mode set"
     fi
 }
 
