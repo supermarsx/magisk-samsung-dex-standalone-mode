@@ -99,10 +99,10 @@ filepath_exists() {
     echo " [INFO] Checking if file path exists: '$filepath'."
     if [ -e "$filepath" ]; then
         echo " [INFO] File exists."
-        return 1
+        return 0
     else
         echo " [INFO] File doesn't exist."
-        return 0
+        return 1
     fi
 }
 
