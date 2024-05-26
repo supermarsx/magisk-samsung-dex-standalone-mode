@@ -10,20 +10,21 @@
 #
 
 # Installation variables
-module_path=$MODPATH
+module_name="samsung-dex-standalone-mode"
+module_path="/data/adb/modules"
 floating_feature_xml_file="floating_feature.xml"
 floating_feature_xml_dir="/system/etc/"
 floating_feature_xml_fullpath="$floating_feature_xml_dir$floating_feature_xml_file"
 floating_feature_xml_dex_key="<SEC_FLOATING_FEATURE_COMMON_CONFIG_DEX_MODE>"
 floating_feature_xml_dex_key_value="standalone"
 floating_feature_xml_patched_file="floating_feature.xml.patched"
-floating_feature_xml_patched_fullpath="$MODPATH/$floating_feature_xml_patched_file"
+floating_feature_xml_patched_fullpath="$module_path/$module_name/$floating_feature_xml_patched_file"
 
 # set_permissions()
 #   Set base permissions
 set_permissions() {
     # Set base permissions to module path, owner is rw, others are read
-    set_perm_recursive "$module_path" 0 0 0755 0755
+    set_perm_recursive "$MODPATH" 0 0 0755 0755
     ui_print " [INFO] Module path permissions set 0755."
 }
 
@@ -116,7 +117,6 @@ install_welcome() {
 install_done() {
     local file="$floating_feature_xml_file"
 
-    ui_print
     ui_print " [INFO] $file will be patched every boot."
     ui_print " [INFO] Installation finished successfully."
     exit 0
