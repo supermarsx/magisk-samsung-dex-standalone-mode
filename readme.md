@@ -45,6 +45,6 @@ Check `floating_feature.xml` values by using `su` and `cat /system/etc/floating_
 
 No warranties whatsoever.
 
-# License
+## License
 
 MIT License, check `license.md`
