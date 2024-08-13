@@ -40,6 +40,9 @@ Every boot `post-fs-data.log` log file is generated with debugging information, 
 
 Check `floating_feature.xml` values by using `su` and `cat /system/etc/floating_feature.xml`
 
+## Issues
+
+*"I'm having issues with gestures after exiting DeX"* or similar, See [Issue 2](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/issues/2)
 
 ## Warranty
 
