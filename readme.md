@@ -22,21 +22,21 @@ Magisk module to systemlessly enable Samsung DeX standalone mode by patching `fl
 
 ## Additional stuff
 
+There are shell `.sh` and batch `.bat` scripts to use according to your OS.
+
 Build related:
 
-`create-module.bat` - Generates a new module ZIP for installation
+`build-create-module.*` - Generates a new module ZIP for installation
 
-`filelist.txt` - File and folder list to include in a new module ZIP
+`build-delete-module.*` - Delete module ZIP from folder
 
-`delete-module.bat` - Delete module ZIP from folder
+`build-filelist.txt` - File and folder list to include in a new module ZIP
 
-Testing related:
+Testing/debug related:
 
-`unmount.sh` - Unmount script
+`debug-unmount.sh` - Unmount script
 
-Debugging related:
-
-Every boot `post-fs-data.log` log file is generated with debugging information, if there was another already there it's overwritten.
+Every boot `post-fs-data.log` log file is generated with debugging information, if there was another already there it's overwritten. It's usually located in the modules folder `/data/adb/modules/magisk-samsung-dex-standalone-mode`.
 
 Check `floating_feature.xml` values by using `su` and `cat /system/etc/floating_feature.xml`
 
