@@ -46,12 +46,12 @@ Check `floating_feature.xml` values by using `su` and `cat /system/etc/floating_
 
 ## Changelog
 
-2024.1
-- Initial release
-
 2024.2
 - Build/debug scripts restructured
 - Module status bug fix
+
+2024.1
+- Initial release
 
 ## Warranty
 
