@@ -3,5 +3,5 @@ customize.sh
 module.prop
 post-fs-data.sh
 skip_mount
-unmount.sh
+debug-unmount.sh
 update.json
