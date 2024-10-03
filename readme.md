@@ -36,7 +36,7 @@ Testing/debug related:
 
 `debug-unmount.sh` - Unmount script
 
-Every boot `post-fs-data.log` log file is generated with debugging information, if there was another already there it's overwritten. It's usually located in the modules folder `/data/adb/modules/magisk-samsung-dex-standalone-mode`.
+Every boot `post-fs-data.log` log file is generated with debugging information, if there was another already there it's overwritten. It's usually located in the modules folder `/data/adb/modules/samsung-dex-standalone-mode`.
 
 Check `floating_feature.xml` values by using `su` and `cat /system/etc/floating_feature.xml`
 
