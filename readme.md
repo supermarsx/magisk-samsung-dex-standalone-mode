@@ -44,6 +44,15 @@ Check `floating_feature.xml` values by using `su` and `cat /system/etc/floating_
 
 *"I'm having issues with gestures after exiting DeX"* or similar, See [Issue 2](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/issues/2)
 
+## Changelog
+
+2024.1
+- Initial release
+
+2024.2
+- Build/debug scripts restructured
+- Module status bug fix
+
 ## Warranty
 
 No warranties whatsoever.
