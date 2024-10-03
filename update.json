@@ -1,6 +1,6 @@
 {
-    "version": "2024.1",
-    "versionCode": "1",
+    "version": "2024.2",
+    "versionCode": "2",
     "zipUrl": "https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/releases/latest/download/magisk-samsung-dex-standalone-mode.zip",
-    "changelog": "Samsung DeX standalone mode, initial release."
+    "changelog": "Module status bug fix."
 }

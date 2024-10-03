@@ -151,31 +151,8 @@ file_is_property_clean() {
     fi
 }
 
-# file_set_property_direct()
-#   Set property of a give properties file directly without checks
-#
-# %usage: file_set_property_direct filepath property value
-# $parameters
-#   filepath - Path to file
-#   property - Property to change
-#   value - Value to set property to
-file_set_property_direct() {
-    fspd_filepath="$1"
-    fspd_property="$2"
-    fspd_value="$3"
-    
-    echo " [INFO] Setting file '$fspd_filepath' property '$fspd_property' value '$fspd_value' directly now." >> "$logfile"
-    if sed -i -E "s/$fspd_property=/&$fspd_value/" "$fspd_filepath"
-    then
-        echo " [INFO] File property was set successfully." >> "$logfile"
-    else
-        error_add "sed.setprop"
-        echo " [ERR!] File property set failed." >> "$logfile"
-    fi
-}
-
 # file_set_property()
-#   Set property of a given properties file
+#   Set property of a given properties file directly without checks
 #
 # %usage: file_set_property filepath property value
 # $parameters
@@ -186,13 +163,36 @@ file_set_property() {
     fsp_filepath="$1"
     fsp_property="$2"
     fsp_value="$3"
+    
+    echo " [INFO] Setting file '$fsp_filepath' property '$fsp_property' value '$fsp_value' directly now." >> "$logfile"
+    if sed -i -E "s/$fsp_property=.^$/$fsp_property=$fsp_value/" "$fsp_filepath"
+    then
+        echo " [INFO] File property was set successfully." >> "$logfile"
+    else
+        error_add "sed.setprop"
+        echo " [ERR!] File property set failed." >> "$logfile"
+    fi
+}
 
-    echo " [INFO] Setting file '$fsp_filepath' property '$fsp_property' value '$fsp_value'." >> "$logfile"
-    if filepath_exists "$fsp_filepath"; then
-        file_clear_property "$fsp_filepath" "$fsp_property"
-        if file_is_property_clean "$fsp_filepath" "$fsp_property"; then
-            if is_empty "$fsp_value"; then
-                file_set_property_direct "$fsp_filepath" "$fsp_property" "$fsp_value"
+# file_set_property_wrapper()
+#   Set property of a given properties file with all the checks
+#
+# %usage: file_set_property_wrapper filepath property value
+# $parameters
+#   filepath - Path to file
+#   property - Property to change
+#   value - Value to set property to
+file_set_property_wrapper() {
+    fspw_filepath="$1"
+    fspw_property="$2"
+    fspw_value="$3"
+
+    echo " [INFO] Setting file '$fspw_filepath' property '$fspw_property' value '$fspw_value'." >> "$logfile"
+    if filepath_exists "$fspw_filepath"; then
+        file_clear_property "$fspw_filepath" "$fspw_property"
+        if file_is_property_clean "$fspw_filepath" "$fspw_property"; then
+            if is_empty "$fspw_value"; then
+                file_set_property "$fspw_filepath" "$fspw_property" "$fspw_value"
                 return 0
             else
                 echo " [INFO] No value was set due to parameters." >> "$logfile"
@@ -203,7 +203,64 @@ file_set_property() {
         fi
     else
         error_add "fileexists"
-        echo " [ERR!] File '$fsp_filepath' doesn't exist." >> "$logfile"
+        echo " [ERR!] File '$fspw_filepath' doesn't exist." >> "$logfile"
+        return 1
+    fi
+}
+
+# file_prepend_value_to_property()
+#   Prepend value to property of a given properties file directly without checks
+#
+# %usage: file_prepend_value_to_property filepath property value
+# $parameters
+#   filepath - Path to file
+#   property - Property to change
+#   value - Value to prepend to property
+file_prepend_value_to_property() {
+    favtp_filepath="$1"
+    favtp_property="$2"
+    favtp_value="$3"
+    
+    echo " [INFO] Setting file '$favtp_filepath' property '$favtp_property' value '$favtp_value' directly now." >> "$logfile"
+    if sed -i -E "s/$favtp_property=/&$fsp_value/" "$fsp_filepath"
+    then
+        echo " [INFO] File property was set successfully." >> "$logfile"
+    else
+        error_add "sed.setprop"
+        echo " [ERR!] File property set failed." >> "$logfile"
+    fi
+}
+
+# file_prepend_value_to_property_wrapper()
+#   Prepend value to property of a given properties file with all the checks
+#
+# %usage: file_prepend_value_to_property_wrapper filepath property value
+# $parameters
+#   filepath - Path to file
+#   property - Property to change
+#   value - Value to prepend to property
+file_prepend_value_to_property_wrapper() {
+    favtpw_filepath="$1"
+    favtpw_property="$2"
+    favtpw_value="$3"
+
+    echo " [INFO] Setting file '$favtpw_filepath' property '$favtpw_property' value '$favtpw_value'." >> "$logfile"
+    if filepath_exists "$favtpw_filepath"; then
+        file_clear_property "$favtpw_filepath" "$favtpw_property"
+        if file_is_property_clean "$favtpw_filepath" "$favtpw_property"; then
+            if is_empty "$favtpw_value"; then
+                file_prepend_value_to_property "$favtpw_filepath" "$fspw_property" "$favtpw_value"
+                return 0
+            else
+                echo " [INFO] No value was set due to parameters." >> "$logfile"
+                return 0
+            fi
+        else
+            return 1
+        fi
+    else
+        error_add "fileexists"
+        echo " [ERR!] File '$favtpw_filepath' doesn't exist." >> "$logfile"
         return 1
     fi
 }
@@ -219,7 +276,7 @@ module_set_message() {
     msm_property="description"
     msm_value="$1"
 
-    file_set_property "$msm_filepath" "$msm_property" "$msm_value"
+    file_set_property_wrapper "$msm_filepath" "$msm_property" "$msm_value"
 }
 
 # file_remove_xml_key_value()
@@ -389,9 +446,9 @@ mount_file() {
 module_set_status() {
     echo " [INFO] Setting module status."
     if [ "$error_count" -gt 0 ]; then
-        module_set_message "⚠️❗ [WARN/ERROR] - Failed to set standalone mode with ($error_count) error(s): $error_message ||| "
+        module_set_message "⚠️❗ [WARN/ERROR] - Failed to set standalone mode with ($error_count) error(s): $error_message."
     else
-        module_set_message "✅ [OK] - Samsung DeX standalone mode set ||| "
+        module_set_message "✅ [OK] - Samsung DeX standalone mode set"
     fi
 }
 
