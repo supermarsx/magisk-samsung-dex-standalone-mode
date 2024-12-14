@@ -43,7 +43,8 @@ Check `floating_feature.xml` values by using `su` and `cat /system/etc/floating_
 ## Issues
 
 *"I'm having issues with gestures after exiting DeX"* or similar, See [Issue 2](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/issues/2)
-*"DeX is ignoring the notch", "Bar and DeX desktop doesn't go all the way" or similar, See [Issue 3](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/issues/3)
+
+*"DeX is ignoring the notch", "Bar and DeX desktop doesn't go all the way"* or similar, See [Issue 3](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/issues/3)
 
 ## Changelog
 
