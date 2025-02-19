@@ -46,6 +46,19 @@ Check `floating_feature.xml` values by using `su` and `cat /system/etc/floating_
 
 *"DeX is ignoring the notch", "Bar and DeX desktop doesn't go all the way"* or similar, See [Issue 3](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/issues/3)
 
+#### Possible fix, change cutout simulation to double cutout, thanks to @admiralsym
+##### Generic instructions on how to change the display cutout setting
+- Enable Developer Options (If Not Already Enabled)
+  - Go to Settings > About phone.
+  - Tap Software information.
+  - Tap Build number seven times until you see "Developer mode has been enabled."
+- Open Developer Options
+  - Go back to Settings.
+  - Scroll down and select Developer options.
+- Change the Display Cutout Setting
+  - Scroll down and find Simulate display with a cutout.
+  - Tap it and select Double cutout.
+
 ## Changelog
 
 2024.2
