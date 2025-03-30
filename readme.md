@@ -65,7 +65,7 @@ Generic instructions on how to change the display cutout setting
   - Scroll down and find Simulate display with a cutout.
   - Tap it and select Double cutout.
 
-#### *"Can't install zip." "Have an unzip error.""* or similar
+#### *"Can't install zip.", "Have an unzip error."* or similar
 
 See [Issue 4](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/issues/4)
 
