@@ -1,6 +1,6 @@
 # magisk-samsung-dex-standalone-mode
 
-Magisk module to systemlessly enable Samsung DeX standalone mode by patching `floating_feature.xml`, adds `standalone` value to `<SEC_FLOATING_FEATURE_COMMON_CONFIG_DEX_MODE>` key.
+Magisk module to systemlessly enable Samsung DeX standalone mode by patching `floating_feature.xml`, it adds `standalone` value to `<SEC_FLOATING_FEATURE_COMMON_CONFIG_DEX_MODE>` key.
 
 ✅ Enables DeX standalone mode on supported phones.
 
@@ -20,25 +20,25 @@ Magisk module to systemlessly enable Samsung DeX standalone mode by patching `fl
 [[Download repository]](https://codeload.github.com/supermarsx/magisk-samsung-dex-standalone-mode/zip/refs/heads/main)
 
 
-## Additional stuff
+## Other goodies
 
-There are shell `.sh` and batch `.bat` scripts to use according to your OS.
+There are shell `.sh` and batch `.bat` scripts to use according to your OS, they're basically build and testing scripts.
 
 Build related:
 
-`build-create-module.*` - Generates a new module ZIP for installation
+`build-create-module.*` - Generates a new distribution ready ZIP module for installation.
 
-`build-delete-module.*` - Delete module ZIP from folder
+`build-delete-module.*` - Delete module the current generated ZIP from folder.
 
-`build-filelist.txt` - File and folder list to include in a new module ZIP
+`build-filelist.txt` - Lists all files and folders to be included in the distribution ready ZIP module.
 
 Testing/debug related:
 
-`debug-unmount.sh` - Unmount script
+`debug-unmount.sh` - Simple unmount script.
 
-Every boot `post-fs-data.log` log file is generated with debugging information, if there was another already there it's overwritten. It's usually located in the modules folder `/data/adb/modules/samsung-dex-standalone-mode`.
+Every boot `post-fs-data.log` a new log file is generated with debugging information, existing log file is always overwritten keeping space footprint small. It's usually located inside the modules folder `/data/adb/modules/samsung-dex-standalone-mode`.
 
-Check `floating_feature.xml` values by using `su` and `cat /system/etc/floating_feature.xml`
+Check `floating_feature.xml` file values by using `su` and then `cat /system/etc/floating_feature.xml` using your preferred terminal interface.
 
 ## Issues
 
@@ -54,6 +54,7 @@ See [Issue 3](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/i
 *TLDR:* Change cutout simulation to double cutout, thanks to [@admiralsym](https://github.com/admiralsym)
 
 Generic instructions on how to change the display cutout setting
+
 - Enable Developer Options (If Not Already Enabled)
   - Go to Settings > About phone.
   - Tap Software information.
@@ -65,22 +66,22 @@ Generic instructions on how to change the display cutout setting
   - Scroll down and find Simulate display with a cutout.
   - Tap it and select Double cutout.
 
-#### *"Can't install zip.", "Have an unzip error."* or similar
+#### *"Can't install zip", "Have an unzip error"* or similar
 
 See [Issue 4](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/issues/4)
 
 ##### Possible fix
 *TLDR:* Use termux to manually install zip, thanks to [@hzykiss](https://github.com/hzykiss) 
 
-- Use a terminal emulator like termux
-- Do su to get root privileges
+- Use a terminal emulator like termux.
+- Do su to get root privileges.
 - Run magisk --install-module full_path_of_the_module.zip to install the module manually.
 
 ## Changelog
 
 2024.2
 - Build/debug scripts restructured
-- Module status bug fix
+- Module status bug fix, kept adding onto olders statuses on reboot
 
 2024.1
 - Initial release
@@ -91,4 +92,4 @@ No warranties whatsoever.
 
 ## License
 
-MIT License, check `license.md`
+MIT License, check `license.md`.
