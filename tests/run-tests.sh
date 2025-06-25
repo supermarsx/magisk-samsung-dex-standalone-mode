@@ -8,6 +8,7 @@ mkdir -p "$MODPATH"
 ui_print() { :; }
 abort() { return 1; }
 chcon() { true; }
+set_perm_recursive() { true; }
 
 # Source scripts without executing main
 # Generate temporary versions of the sourced scripts without their final lines
@@ -20,6 +21,8 @@ sed '$d' customize.sh > /tmp/customize.sh
 sed '$d' build-tools/debug-unmount.sh > /tmp/debug-unmount.sh
 # shellcheck source=/tmp/debug-unmount.sh disable=SC1091
 . /tmp/debug-unmount.sh
+# Re-source post-fs-data functions to override debug replacements
+. /tmp/pfsd.sh
 
 logfile="/tmp/test.log"
 module_prop_fullpath="/tmp/module.prop"
@@ -83,6 +86,77 @@ if grep -q 'description=hello' "$module_prop_fullpath"; then
   echo "PASSED: module set message"
 else
   echo "FAILED: module set message"
+  failure=1
+fi
+
+# Test error helper utilities
+error_count=0
+error_message=""
+assert_return 0 increment_error_count
+if [ "$error_count" -eq 1 ]; then
+  echo "PASSED: increment_error_count"
+else
+  echo "FAILED: increment_error_count"
+  failure=1
+fi
+
+assert_return 0 error_message_append "foo"
+if [ "$error_message" = "foo failed;" ]; then
+  echo "PASSED: error_message_append"
+else
+  echo "FAILED: error_message_append"
+  failure=1
+fi
+
+assert_return 0 error_add "bar"
+if [ "$error_count" -eq 2 ]; then
+  echo "PASSED: error_add"
+else
+  echo "FAILED: error_add"
+  failure=1
+fi
+
+# Direct property helpers
+cat > /tmp/direct.prop <<PROP
+prop=old
+PROP
+assert_return 0 file_set_property /tmp/direct.prop prop new
+if grep -q 'prop=new' /tmp/direct.prop; then
+  echo "PASSED: file_set_property"
+else
+  echo "FAILED: file_set_property"
+  failure=1
+fi
+
+cat > /tmp/direct_prepend.prop <<PROP
+prop=bar
+PROP
+assert_return 0 file_prepend_value_to_property /tmp/direct_prepend.prop prop prefix
+if grep -q 'prop=prefixbar' /tmp/direct_prepend.prop; then
+  echo "PASSED: file_prepend_value_to_property"
+else
+  echo "FAILED: file_prepend_value_to_property"
+  failure=1
+fi
+
+# Module status helper
+error_count=0
+error_message=""
+assert_return 0 module_set_status
+if grep -q 'Samsung DeX standalone mode set' "$module_prop_fullpath"; then
+  echo "PASSED: module_set_status ok"
+else
+  echo "FAILED: module_set_status ok"
+  failure=1
+fi
+
+# Permission helper
+touch /tmp/permfile
+assert_return 0 set_permissions /tmp/permfile
+if [ "$(stat -c %a /tmp/permfile)" = "644" ] && [ "$(stat -c %U:%G /tmp/permfile)" = "root:root" ]; then
+  echo "PASSED: set_permissions"
+else
+  echo "FAILED: set_permissions"
   failure=1
 fi
 
