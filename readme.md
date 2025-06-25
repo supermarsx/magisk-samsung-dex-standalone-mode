@@ -22,23 +22,34 @@ Magisk module to systemlessly enable Samsung DeX standalone mode by patching `fl
 
 ## Other goodies
 
-There are shell `.sh` and batch `.bat` scripts to use according to your OS, they're basically build and testing scripts.
+There are shell `.sh` and batch `.bat` scripts to use according to your OS. They now live inside the `build-tools/` folder and are used for building and debugging the module.
 
 Build related:
 
-`build-create-module.*` - Generates a new distribution ready ZIP module for installation.
+`build-tools/build-create-module.*` - Generates a new distribution ready ZIP module for installation.
 
-`build-delete-module.*` - Delete module the current generated ZIP from folder.
+`build-tools/build-delete-module.*` - Delete the current generated ZIP from folder.
 
-`build-filelist.txt` - Lists all files and folders to be included in the distribution ready ZIP module.
+`build-tools/build-filelist.txt` - Lists all files and folders to be included in the distribution ready ZIP module.
 
 Testing/debug related:
 
-`debug-unmount.sh` - Simple unmount script.
+`build-tools/debug-unmount.sh` - Simple unmount script.
 
 Every boot `post-fs-data.log` a new log file is generated with debugging information, existing log file is always overwritten keeping space footprint small. It's usually located inside the modules folder `/data/adb/modules/samsung-dex-standalone-mode`.
 
+
 Check `floating_feature.xml` file values by using `su` and then `cat /system/etc/floating_feature.xml` using your preferred terminal interface.
+
+## Testing
+
+Run the shell based tests with:
+
+```bash
+bash tests/run-tests.sh
+```
+
+Tests are also executed automatically in the CI pipeline.
 
 ## Issues
 
