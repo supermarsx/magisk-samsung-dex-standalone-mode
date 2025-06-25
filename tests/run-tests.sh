@@ -54,6 +54,31 @@ PROP
 assert_return 0 file_set_property_wrapper /tmp/test.prop prop value
 grep -q 'prop=value' /tmp/test.prop && echo "PASSED: property set" || { echo "FAILED: property not set"; failure=1; }
 
+# Test XML utilities
+cat > /tmp/xml_add.xml <<EOF
+<a>foo</a>
+EOF
+assert_return 0 file_add_xml_key_value /tmp/xml_add.xml a bar
+grep -q '<a>foo,bar</a>' /tmp/xml_add.xml && echo "PASSED: add xml key value" || { echo "FAILED: add xml key value"; failure=1; }
+
+cat > /tmp/xml_remove.xml <<EOF
+<a>foo,bar,baz</a>
+EOF
+assert_return 0 file_remove_xml_key_value /tmp/xml_remove.xml a bar
+grep -q '<a>foo,baz</a>' /tmp/xml_remove.xml && echo "PASSED: remove xml key value" || { echo "FAILED: remove xml key value"; failure=1; }
+
+cat > /tmp/xml_commas.xml <<EOF
+<a>foo,</a>
+EOF
+assert_return 0 file_remove_xml_key_commas /tmp/xml_commas.xml a
+grep -q '<a>foo</a>' /tmp/xml_commas.xml && echo "PASSED: remove xml key commas" || { echo "FAILED: remove xml key commas"; failure=1; }
+
+cat > /tmp/xml_orig.xml <<EOF
+<a>foo</a>
+EOF
+assert_return 0 file_set_xml_key /tmp/xml_orig.xml /tmp/xml_patched.xml a bar
+grep -q '<a>foo,bar</a>' /tmp/xml_patched.xml && echo "PASSED: set xml key" || { echo "FAILED: set xml key"; failure=1; }
+
 if [ "$failure" -eq 0 ]; then
   echo "All tests passed"
 else
