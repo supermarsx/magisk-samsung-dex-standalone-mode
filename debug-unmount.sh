@@ -3,6 +3,15 @@
 # Unmount variables
 floating_feature_xml_patched_file="floating_feature.xml.patched"
 
+# error_add()
+#   Print an error message
+#
+# %usage: error_add message
+error_add() {
+    ea_value="$1"
+    echo " [ERR!] Operation failed: $ea_value"
+}
+
 # unmount_file()
 #   Unmount target
 #
