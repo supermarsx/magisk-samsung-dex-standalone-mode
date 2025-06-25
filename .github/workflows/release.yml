@@ -1,0 +1,26 @@
+name: Build Release
+
+on:
+  push:
+    tags:
+      - '*'
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build module
+        run: bash build-tools/build-create-module.sh
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: magisk-samsung-dex-standalone-mode
+          path: magisk-samsung-dex-standalone-mode.zip
+      - name: Upload release asset
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: magisk-samsung-dex-standalone-mode.zip
