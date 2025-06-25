@@ -45,6 +45,12 @@ Testing/debug related:
 
 `build-tools/debug-unmount.sh` - Simple unmount script.
 
+Run it after testing the module to unmount the patched file:
+
+```bash
+sh build-tools/debug-unmount.sh
+```
+
 Every boot `post-fs-data.log` a new log file is generated with debugging information, existing log file is always overwritten keeping space footprint small. It's usually located inside the modules folder `/data/adb/modules/samsung-dex-standalone-mode`.
 
 ## Building
