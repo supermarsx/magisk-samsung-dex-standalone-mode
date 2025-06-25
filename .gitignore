@@ -1,0 +1,10 @@
+# Ignore built zip module
+magisk-samsung-dex-standalone-mode.zip
+
+# Generic temporary files
+*.log
+*.tmp
+
+# Build artifacts directory
+/build/
+
