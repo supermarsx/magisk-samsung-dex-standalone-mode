@@ -15,11 +15,11 @@ error_add() {
 # unmount_file()
 #   Unmount target
 #
-# %usage: unmount_file source_path target_path
+# %usage: unmount_file target_path
 # parameters
-#   destination_path - Destination file path
+#   target_path - Destination file path to unmount
 unmount_file() {
-    uf_destination_path="$2"
+    uf_destination_path="$1"
 
     echo " [INFO] Unmounting."
     if umount "$uf_destination_path"; then
