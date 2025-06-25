@@ -220,9 +220,9 @@ file_prepend_value_to_property() {
     favtp_filepath="$1"
     favtp_property="$2"
     favtp_value="$3"
-    
+
     echo " [INFO] Setting file '$favtp_filepath' property '$favtp_property' value '$favtp_value' directly now." >> "$logfile"
-    if sed -i -E "s/$favtp_property=/&$fsp_value/" "$fsp_filepath"
+    if sed -i -E "s/$favtp_property=/&$favtp_value/" "$favtp_filepath"
     then
         echo " [INFO] File property was set successfully." >> "$logfile"
     else
@@ -249,7 +249,7 @@ file_prepend_value_to_property_wrapper() {
         file_clear_property "$favtpw_filepath" "$favtpw_property"
         if file_is_property_clean "$favtpw_filepath" "$favtpw_property"; then
             if ! is_empty "$favtpw_value"; then
-                file_prepend_value_to_property "$favtpw_filepath" "$fspw_property" "$favtpw_value"
+                file_prepend_value_to_property "$favtpw_filepath" "$favtpw_property" "$favtpw_value"
                 return 0
             else
                 echo " [INFO] No value was set due to parameters." >> "$logfile"
