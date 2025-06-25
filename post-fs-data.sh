@@ -61,7 +61,7 @@ error_add() {
 is_empty() {
     ie_value="$1"
 
-    if [ -n "$ie_value" ]; then
+    if [ -z "$ie_value" ]; then
         return 0
     else
         return 1
@@ -191,7 +191,7 @@ file_set_property_wrapper() {
     if filepath_exists "$fspw_filepath"; then
         file_clear_property "$fspw_filepath" "$fspw_property"
         if file_is_property_clean "$fspw_filepath" "$fspw_property"; then
-            if is_empty "$fspw_value"; then
+            if ! is_empty "$fspw_value"; then
                 file_set_property "$fspw_filepath" "$fspw_property" "$fspw_value"
                 return 0
             else
@@ -248,7 +248,7 @@ file_prepend_value_to_property_wrapper() {
     if filepath_exists "$favtpw_filepath"; then
         file_clear_property "$favtpw_filepath" "$favtpw_property"
         if file_is_property_clean "$favtpw_filepath" "$favtpw_property"; then
-            if is_empty "$favtpw_value"; then
+            if ! is_empty "$favtpw_value"; then
                 file_prepend_value_to_property "$favtpw_filepath" "$fspw_property" "$favtpw_value"
                 return 0
             else
