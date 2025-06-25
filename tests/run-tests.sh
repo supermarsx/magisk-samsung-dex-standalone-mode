@@ -42,8 +42,8 @@ rm /tmp/fileexists
 assert_return 1 filepath_exists /tmp/fileexists
 
 echo '<a>bar</a>' > /tmp/test.xml
-assert_return 0 file_key_exists /tmp/test.xml '<a>'
-assert_return 1 file_key_exists /tmp/test.xml '<b>'
+assert_return 0 file_key_exists /tmp/test.xml a
+assert_return 1 file_key_exists /tmp/test.xml b
 
 assert_return 0 is_empty ''
 assert_return 1 is_empty 'abc'
