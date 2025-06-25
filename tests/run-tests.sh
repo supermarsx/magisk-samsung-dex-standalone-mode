@@ -54,7 +54,7 @@ PROP
 assert_return 0 file_set_property_wrapper /tmp/test.prop prop value
 grep -q 'prop=value' /tmp/test.prop && echo "PASSED: property set" || { echo "FAILED: property not set"; failure=1; }
 
-if [ $failure -eq 0 ]; then
+if [ "$failure" -eq 0 ]; then
   echo "All tests passed"
 else
   echo "Some tests failed"
