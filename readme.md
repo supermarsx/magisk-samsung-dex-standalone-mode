@@ -36,6 +36,11 @@ Build related:
 
 `build-tools/build-filelist.txt` - Lists all files and folders to be included in the distribution ready ZIP module.
 
+A `Makefile` is also provided for convenience with the targets:
+`make build` - create the ZIP module.
+`make clean` - remove the generated module.
+`make test` - run the shell tests.
+
 Testing/debug related:
 
 `build-tools/debug-unmount.sh` - Simple unmount script.
@@ -44,8 +49,8 @@ Every boot `post-fs-data.log` a new log file is generated with debugging informa
 
 ## Building
 
-Run `build-tools/build-create-module.sh` from the repository root to create `magisk-samsung-dex-standalone-mode.zip` using the paths listed in `build-tools/build-filelist.txt`.
-Use `build-tools/build-delete-module.sh` to remove a previously generated ZIP.
+Run `make build` from the repository root to create `magisk-samsung-dex-standalone-mode.zip` using the paths listed in `build-tools/build-filelist.txt`.
+Use `make clean` to remove a previously generated ZIP.
 During development `build-tools/debug-unmount.sh` can be used to unmount the patched file.
 
 
@@ -56,7 +61,7 @@ Check `floating_feature.xml` file values by using `su` and then `cat /system/etc
 Run the shell based tests from the repository root with:
 
 ```bash
-bash tests/run-tests.sh
+make test
 ```
 
 Tests are also executed automatically in the CI pipeline.
