@@ -140,7 +140,7 @@ install_exists() {
         ui_print " [INFO] Skipping installation checks."
         install_done
     else
-        ui_print " [INFO] No previous installation installation found."
+        ui_print " [INFO] No previous installation found."
         ui_print " [INFO] Going for initial *installation*."
     fi
 }
