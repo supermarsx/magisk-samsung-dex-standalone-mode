@@ -40,6 +40,7 @@ A `Makefile` is also provided for convenience with the targets:
 `make build` - create the ZIP module.
 `make clean` - remove the generated module.
 `make test` - run the shell tests.
+`make lint` - run shellcheck on all scripts.
 
 Testing/debug related:
 
@@ -68,6 +69,10 @@ Run the shell based tests from the repository root with:
 
 ```bash
 make test
+```
+Lint all shell scripts with:
+```bash
+make lint
 ```
 
 Tests are also executed automatically in the CI pipeline.

@@ -1,4 +1,4 @@
-.PHONY: build clean test
+.PHONY: build clean test lint
 
 build:
 	bash build-tools/build-create-module.sh
@@ -8,3 +8,6 @@ clean:
 
 test:
 	bash tests/run-tests.sh
+
+lint:
+	shellcheck $(git ls-files '*.sh')
