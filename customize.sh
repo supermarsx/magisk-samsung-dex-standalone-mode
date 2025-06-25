@@ -14,7 +14,7 @@ module_path="/data/adb/modules"
 floating_feature_xml_file="floating_feature.xml"
 floating_feature_xml_dir="/system/etc/"
 floating_feature_xml_fullpath="$floating_feature_xml_dir$floating_feature_xml_file"
-floating_feature_xml_dex_key="<SEC_FLOATING_FEATURE_COMMON_CONFIG_DEX_MODE>"
+floating_feature_xml_dex_key="SEC_FLOATING_FEATURE_COMMON_CONFIG_DEX_MODE"
 floating_feature_xml_dex_key_value="standalone"
 floating_feature_xml_patched_file="floating_feature.xml.patched"
 floating_feature_xml_patched_fullpath="$module_path/$module_name/$floating_feature_xml_patched_file"
@@ -56,7 +56,7 @@ file_key_exists() {
     fke_filepath="$1"
     fke_key="$2"
 
-    if grep -q "$fke_key" "$fke_filepath"; then
+    if grep -q "<$fke_key" "$fke_filepath"; then
         ui_print " [INFO] Key '$fke_key' exists inside '$fke_filepath'."
         return 0
     else
