@@ -22,6 +22,8 @@ sed '$d' build-tools/debug-unmount.sh > /tmp/debug-unmount.sh
 . /tmp/debug-unmount.sh
 
 logfile="/tmp/test.log"
+module_prop_fullpath="/tmp/module.prop"
+echo "description=" > "$module_prop_fullpath"
 
 failure=0
 
@@ -60,6 +62,57 @@ if grep -q 'prop=value' /tmp/test.prop; then
   echo "PASSED: property set"
 else
   echo "FAILED: property not set"
+  failure=1
+fi
+
+# Test property prepend wrapper
+cat > /tmp/prepend.prop <<PROP
+prop=
+PROP
+assert_return 0 file_prepend_value_to_property_wrapper /tmp/prepend.prop prop prefix
+if grep -q 'prop=prefix' /tmp/prepend.prop; then
+  echo "PASSED: prepend value to property"
+else
+  echo "FAILED: prepend value to property"
+  failure=1
+fi
+
+# Test module_set_message
+assert_return 0 module_set_message "hello"
+if grep -q 'description=hello' "$module_prop_fullpath"; then
+  echo "PASSED: module set message"
+else
+  echo "FAILED: module set message"
+  failure=1
+fi
+
+# Additional helpers
+cat > /tmp/src.txt <<EOF
+foo
+EOF
+assert_return 0 file_copy /tmp/src.txt /tmp/dst.txt
+if [ -f /tmp/dst.txt ] && grep -q foo /tmp/dst.txt; then
+  echo "PASSED: file copy"
+else
+  echo "FAILED: file copy"
+  failure=1
+fi
+
+cat > /tmp/clear.prop <<PROP
+prop=value
+PROP
+file_clear_property /tmp/clear.prop prop
+assert_return 0 file_is_property_clean /tmp/clear.prop prop
+
+echo '<a>foo bar</a>' > /tmp/contains.xml
+assert_return 0 file_key_contains_value /tmp/contains.xml a foo
+assert_return 1 file_key_contains_value /tmp/contains.xml a baz
+
+module_remove_mark
+if [ -f "$MODPATH/remove" ]; then
+  echo "PASSED: module remove mark"
+else
+  echo "FAILED: module remove mark"
   failure=1
 fi
 
