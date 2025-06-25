@@ -1,4 +1,5 @@
 #!/system/bin/sh
+set -euo pipefail
 
 # Unmount variables
 floating_feature_xml_patched_file="floating_feature.xml.patched"
