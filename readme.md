@@ -19,6 +19,10 @@ Magisk module to systemlessly enable Samsung DeX standalone mode by patching `fl
 
 [[Download repository]](https://codeload.github.com/supermarsx/magisk-samsung-dex-standalone-mode/zip/refs/heads/main)
 
+## Prerequisites
+
+The build scripts require `bash` and the `zip` command to be installed and available in your PATH. Linux distributions usually provide them by default. Windows users can rely on WSL or Git Bash.
+
 
 ## Other goodies
 
@@ -38,18 +42,32 @@ Testing/debug related:
 
 Every boot `post-fs-data.log` a new log file is generated with debugging information, existing log file is always overwritten keeping space footprint small. It's usually located inside the modules folder `/data/adb/modules/samsung-dex-standalone-mode`.
 
+## Building
+
+Run `build-tools/build-create-module.sh` from the repository root to create `magisk-samsung-dex-standalone-mode.zip` using the paths listed in `build-tools/build-filelist.txt`.
+Use `build-tools/build-delete-module.sh` to remove a previously generated ZIP.
+During development `build-tools/debug-unmount.sh` can be used to unmount the patched file.
+
 
 Check `floating_feature.xml` file values by using `su` and then `cat /system/etc/floating_feature.xml` using your preferred terminal interface.
 
 ## Testing
 
-Run the shell based tests with:
+Run the shell based tests from the repository root with:
 
 ```bash
 bash tests/run-tests.sh
 ```
 
 Tests are also executed automatically in the CI pipeline.
+## Manual installation
+
+After building the ZIP you can install it directly with Magisk:
+
+```bash
+magisk --install-module path/to/magisk-samsung-dex-standalone-mode.zip
+```
+
 
 ## Issues
 
