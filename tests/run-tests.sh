@@ -23,10 +23,24 @@ sed '$d' build-tools/debug-unmount.sh > /tmp/debug-unmount.sh
 . /tmp/debug-unmount.sh
 # Re-source post-fs-data functions to override debug replacements
 . /tmp/pfsd.sh
+# Restore customize functions overridden above
+. /tmp/customize.sh
 
 logfile="/tmp/test.log"
 module_prop_fullpath="/tmp/module.prop"
 echo "description=" > "$module_prop_fullpath"
+
+# Environment for install_process tests
+module_path="/tmp/modules"
+floating_feature_xml_dir="/tmp/"
+floating_feature_xml_fullpath="${floating_feature_xml_dir}${floating_feature_xml_file}"
+floating_feature_xml_patched_fullpath="$module_path/$module_name/$floating_feature_xml_patched_file"
+mkdir -p "$(dirname "$floating_feature_xml_patched_fullpath")"
+touch "$floating_feature_xml_fullpath"
+
+install_process_wrapper() {
+  ( set -e; install_process )
+}
 
 failure=0
 
@@ -232,6 +246,20 @@ if grep -q '<a>foo,bar</a>' /tmp/xml_patched.xml; then
   echo "PASSED: set xml key"
 else
   echo "FAILED: set xml key"
+  failure=1
+fi
+
+# Test install_process behaviour
+touch "$floating_feature_xml_patched_fullpath"
+assert_return 0 install_process_wrapper
+rm -f "$floating_feature_xml_patched_fullpath"
+rm -f "$MODPATH/remove"
+rm -f "$floating_feature_xml_fullpath"
+assert_return 1 install_process_wrapper
+if [ -f "$MODPATH/remove" ]; then
+  echo "PASSED: install abort path"
+else
+  echo "FAILED: install abort path"
   failure=1
 fi
 
