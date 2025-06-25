@@ -65,6 +65,11 @@ make test
 ```
 
 Tests are also executed automatically in the CI pipeline.
+
+## Release workflow
+
+A GitHub Actions workflow builds the module whenever a tag is pushed or a release is published. The resulting `magisk-samsung-dex-standalone-mode.zip` is saved as a workflow artifact and attached to the release.
+
 ## Manual installation
 
 After building the ZIP you can install it directly with Magisk:
