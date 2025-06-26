@@ -9,6 +9,7 @@ ui_print() { :; }
 abort() { return 1; }
 chcon() { true; }
 set_perm_recursive() { true; }
+umount() { return "${UMOUNT_RC:-0}"; }
 
 # Source scripts without executing main
 # Generate temporary versions of the sourced scripts without their final lines
@@ -201,6 +202,83 @@ if [ -f "$MODPATH/remove" ]; then
   echo "PASSED: module remove mark"
 else
   echo "FAILED: module remove mark"
+  failure=1
+fi
+
+# Test unmount utilities
+UMOUNT_RC=0
+out=$(unmount_file /tmp/test.unmount 2>&1)
+rc=$?
+if [ "$rc" -eq 0 ]; then
+  echo "PASSED: unmount_file success"
+else
+  echo "FAILED: unmount_file success"
+  failure=1
+fi
+if echo "$out" | grep -q 'Unmount was successful.'; then
+  echo "PASSED: unmount_file log success"
+else
+  echo "FAILED: unmount_file log success"
+  failure=1
+fi
+
+UMOUNT_RC=1
+out=$(unmount_file /tmp/test.unmount 2>&1 || true)
+rc=$?
+if [ "$rc" -eq 0 ]; then
+  echo "PASSED: unmount_file failure"
+else
+  echo "FAILED: unmount_file failure"
+  failure=1
+fi
+if echo "$out" | grep -q 'Unmount failed.'; then
+  echo "PASSED: unmount_file log failure"
+else
+  echo "FAILED: unmount_file log failure"
+  failure=1
+fi
+if grep -q 'mount.bind' "$logfile"; then
+  echo "PASSED: unmount_file error logged"
+else
+  echo "FAILED: unmount_file error logged"
+  failure=1
+fi
+
+UMOUNT_RC=0
+out=$(process_unmount 2>&1)
+rc=$?
+if [ "$rc" -eq 0 ]; then
+  echo "PASSED: process_unmount success"
+else
+  echo "FAILED: process_unmount success"
+  failure=1
+fi
+if echo "$out" | grep -q 'Unmount was successful.'; then
+  echo "PASSED: process_unmount log success"
+else
+  echo "FAILED: process_unmount log success"
+  failure=1
+fi
+
+UMOUNT_RC=1
+out=$(process_unmount 2>&1 || true)
+rc=$?
+if [ "$rc" -eq 0 ]; then
+  echo "PASSED: process_unmount failure"
+else
+  echo "FAILED: process_unmount failure"
+  failure=1
+fi
+if echo "$out" | grep -q 'Unmount failed.'; then
+  echo "PASSED: process_unmount log failure"
+else
+  echo "FAILED: process_unmount log failure"
+  failure=1
+fi
+if grep -q 'mount.bind' "$logfile"; then
+  echo "PASSED: process_unmount error logged"
+else
+  echo "FAILED: process_unmount error logged"
   failure=1
 fi
 
