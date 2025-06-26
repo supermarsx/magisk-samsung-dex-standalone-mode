@@ -12,3 +12,17 @@ jobs:
       - uses: actions/checkout@v3
       - name: Run shell tests
         run: bash tests/run-tests.sh
+  package:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Verify ZIP creation
+        run: bash tests/test-build-create-module.sh
+  package-windows:
+    needs: test
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Verify ZIP creation on Windows
+        run: pwsh tests/test-build-create-module.ps1
