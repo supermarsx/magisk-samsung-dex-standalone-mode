@@ -20,9 +20,9 @@ floating_feature_xml_dex_key_value="standalone"
 floating_feature_xml_patched_file="floating_feature.xml.patched"
 floating_feature_xml_patched_fullpath="$module_path/$module_name/$floating_feature_xml_patched_file"
 
-# set_permissions()
+# set_module_permissions()
 #   Set base permissions
-set_permissions() {
+set_module_permissions() {
     # Set base permissions to module path, owner is rw, others are read
     set_perm_recursive "$MODPATH" 0 0 0755 0755
     ui_print " [INFO] Module path permissions set 0755."
@@ -206,7 +206,7 @@ install_requirements_check() {
 #   Process installation (main/entry)
 install_process() {
     install_welcome
-    set_permissions
+    set_module_permissions
     install_requirements_check
 }
 
