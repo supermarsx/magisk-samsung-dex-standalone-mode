@@ -33,7 +33,7 @@ if exist "%ZIPFILE%" (
 set "FILELIST="
 echo Preparing file list.
 for /f "delims=" %%i in (%LISTFILE%) do (
-    set "FILELIST=!FILELIST! '%CD%\%%i',"
+    set "FILELIST=!FILELIST! '%%i',"
 )
 
 :: Remove the leading comma and space if they exist
@@ -50,7 +50,7 @@ if "!FILELIST:~-1!" == "," (
 :: Execute PowerShell to create the ZIP file
 echo Creating ZIP module.
 powershell -NoProfile -ExecutionPolicy Bypass ^
-  "Compress-Archive -Path @(%FILELIST%) -DestinationPath '%CD%\%ZIPFILE%' -Force"
+  "Compress-Archive -Path @(%FILELIST%) -DestinationPath '%ZIPFILE%' -Force"
 if not exist "%ZIPFILE%" (
     echo Failed to create ZIP module, "%ZIPFILE%".
     goto quit_with_error
