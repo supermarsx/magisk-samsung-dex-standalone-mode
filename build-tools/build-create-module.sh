@@ -30,7 +30,7 @@ fi
 FILELIST=()
 echo Preparing file list.
 while IFS= read -r line; do
-    FILELIST+=("${PWD}/${line}")
+    FILELIST+=("${line}")
 done < "${LISTFILE}"
 
 # Execute zip command to create the ZIP file
