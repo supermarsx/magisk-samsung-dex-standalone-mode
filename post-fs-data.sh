@@ -1,5 +1,5 @@
 #!/system/bin/sh
-set -euo pipefail
+set -eu
 
 # General variables
 module_name="samsung-dex-standalone-mode"

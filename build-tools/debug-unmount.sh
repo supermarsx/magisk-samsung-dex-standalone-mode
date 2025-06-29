@@ -1,8 +1,7 @@
 #!/system/bin/sh
-set -euo pipefail
+set -eu
 
 # Unmount variables
-floating_feature_xml_patched_file="floating_feature.xml.patched"
 floating_feature_xml_original_fullpath="/system/etc/floating_feature.xml"
 
 # error_add()
