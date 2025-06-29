@@ -20,10 +20,15 @@ Magisk module to systemlessly enable Samsung DeX standalone mode by patching `fl
 
 [[Download repository]](https://codeload.github.com/supermarsx/magisk-samsung-dex-standalone-mode/zip/refs/heads/main)
 
-## Prerequisites
+## Module requirements 
+
+- Samsung One UI based ROM installed, either stock or custom, doesn't matter
+- Rooted phone with Magisk or KernelSU (aka KSU)
+- No potentially conflicting modules installed that change or interact with `floating_feature.xml`, overlapping modules will cause problems.
+
+## Build Prerequisites
 
 The build scripts require `bash` and the `zip` command to be installed and available in your PATH. Linux distributions usually provide them by default. Windows users can rely on WSL or Git Bash.
-
 
 ## Other goodies
 
@@ -127,6 +132,31 @@ See [Issue 4](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/i
 - Use a terminal emulator like termux.
 - Do su to get root privileges.
 - Run magisk --install-module full_path_of_the_module.zip to install the module manually.
+
+## Questions & Answers
+
+Thanks to @WilsonBradley and @foxypiratecove37350 for their questions, adapted for my easy
+
+**Q. Does this require a Samsung device?**
+- **A.** It does indeed, a Samsung but more precisely a Samsung based ROM with DeX in it.
+
+**Q. By "Standalone mode" - does this mean DeX can be started on device itself at will (no HDMI connection required)?**
+- **A.** YES, this what the module actually pretends to solve.
+
+**Q. Could DeX be screen shared to another Android device?**
+- **A.** This is a Android/DeX specific question but my guess is no?, if you know better open an issue.
+
+**Q. Can it work on non-Samsung devices, or Samsung devices that don't support DeX?**
+- **A.** Short is answer no. Long answer is any Samsung based ROM that has DeX can be used somehow, not at my level of interest though.
+
+**Q. Can it work if the Samsung device has a custom ROM?**
+- **A.** Maybe, if the custom ROM is stock/One UI based and has DeX it will work.
+
+**Q. What are the requirements to run this?**
+- **A.** Please check "module requirements" for more information.
+
+**Q. Will this add DeX to my phone?**
+- **A.** No.
 
 ## Changelog
 
