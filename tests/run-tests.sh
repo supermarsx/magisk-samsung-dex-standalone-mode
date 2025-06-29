@@ -12,6 +12,7 @@ abort() { return 1; }
 chcon() { true; }
 set_perm_recursive() { true; }
 umount() { return "${UMOUNT_RC:-0}"; }
+mount() { return "${MOUNT_RC:-0}"; }
 
 # Source scripts without executing main
 # Generate temporary versions of the sourced scripts without their final lines
@@ -48,6 +49,22 @@ touch "$floating_feature_xml_fullpath"
 
 install_process_wrapper() {
   ( set -e; install_process )
+}
+
+post_fs_process_wrapper() {
+  module_dir="$module_path/$module_name/"
+  logfile="/tmp/test.log"
+  module_log_file_fullpath="$logfile"
+  floating_feature_xml_dir="/tmp/"
+  floating_feature_xml_fullpath="${floating_feature_xml_dir}${floating_feature_xml_file}"
+  floating_feature_xml_patched_fullpath="${module_dir}${floating_feature_xml_patched_file}"
+  mkdir -p "$module_dir"
+  echo "<${floating_feature_xml_dex_key}>base</${floating_feature_xml_dex_key}>" > "$floating_feature_xml_fullpath"
+  echo "description=" > "$module_prop_fullpath"
+  error_count=0
+  error_message=""
+  rm -f "$floating_feature_xml_patched_fullpath"
+  post_fs_process
 }
 
 failure=0
@@ -345,6 +362,37 @@ if [ -f "$MODPATH/remove" ]; then
   echo "PASSED: install abort path"
 else
   echo "FAILED: install abort path"
+  failure=1
+fi
+
+# Test post_fs_process behaviour
+MOUNT_RC=0
+assert_return 0 post_fs_process_wrapper
+if [ -f "$floating_feature_xml_patched_fullpath" ]; then
+  echo "PASSED: post_fs_process patch file"
+else
+  echo "FAILED: post_fs_process patch file"
+  failure=1
+fi
+if grep -q 'Samsung DeX standalone mode set' "$module_prop_fullpath"; then
+  echo "PASSED: post_fs_process success status"
+else
+  echo "FAILED: post_fs_process success status"
+  failure=1
+fi
+
+MOUNT_RC=1
+assert_return 0 post_fs_process_wrapper
+if [ "$error_count" -gt 0 ]; then
+  echo "PASSED: post_fs_process error count"
+else
+  echo "FAILED: post_fs_process error count"
+  failure=1
+fi
+if grep -q 'WARN/ERROR' "$module_prop_fullpath"; then
+  echo "PASSED: post_fs_process warn status"
+else
+  echo "FAILED: post_fs_process warn status"
   failure=1
 fi
 
