@@ -337,14 +337,42 @@ fi
 # Test install_process behaviour
 touch "$floating_feature_xml_patched_fullpath"
 assert_return 0 install_process_wrapper
+
+# Scenario: floating feature file missing
 rm -f "$floating_feature_xml_patched_fullpath"
 rm -f "$MODPATH/remove"
 rm -f "$floating_feature_xml_fullpath"
 assert_return 1 install_process_wrapper
 if [ -f "$MODPATH/remove" ]; then
-  echo "PASSED: install abort path"
+  echo "PASSED: install abort missing file"
 else
-  echo "FAILED: install abort path"
+  echo "FAILED: install abort missing file"
+  failure=1
+fi
+rm -f "$MODPATH/remove"
+
+# Scenario: floating feature key missing
+cat > "$floating_feature_xml_fullpath" <<EOF
+<root></root>
+EOF
+assert_return 1 install_process_wrapper
+if [ -f "$MODPATH/remove" ]; then
+  echo "PASSED: install abort missing key"
+else
+  echo "FAILED: install abort missing key"
+  failure=1
+fi
+rm -f "$MODPATH/remove"
+
+# Scenario: floating feature already enabled
+cat > "$floating_feature_xml_fullpath" <<EOF
+<${floating_feature_xml_dex_key}>standalone</${floating_feature_xml_dex_key}>
+EOF
+assert_return 1 install_process_wrapper
+if [ -f "$MODPATH/remove" ]; then
+  echo "PASSED: install abort already enabled"
+else
+  echo "FAILED: install abort already enabled"
   failure=1
 fi
 
