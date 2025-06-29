@@ -35,8 +35,12 @@ echo "description=" > "$module_prop_fullpath"
 
 # Environment for install_process tests
 module_path="/tmp/modules"
+module_name="samsung-dex-standalone-mode"
+floating_feature_xml_file="floating_feature.xml"
+floating_feature_xml_patched_file="floating_feature.xml.patched"
 floating_feature_xml_dir="/tmp/"
 floating_feature_xml_fullpath="${floating_feature_xml_dir}${floating_feature_xml_file}"
+# shellcheck disable=SC2034
 floating_feature_xml_original_fullpath="$floating_feature_xml_fullpath"
 floating_feature_xml_patched_fullpath="$module_path/$module_name/$floating_feature_xml_patched_file"
 mkdir -p "$(dirname "$floating_feature_xml_patched_fullpath")"
