@@ -166,7 +166,8 @@ file_set_property() {
     fsp_value="$3"
     
     echo " [INFO] Setting file '$fsp_filepath' property '$fsp_property' value '$fsp_value' directly now." >> "$logfile"
-    if sed -i -E "s/$fsp_property=.*$/$fsp_property=$fsp_value/" "$fsp_filepath"
+    fsp_value_escaped=$(printf '%s' "$fsp_value" | sed 's/[\\/&]/\\&/g')
+    if sed -i -E "s@$fsp_property=.*@$fsp_property=$fsp_value_escaped@" "$fsp_filepath"
     then
         echo " [INFO] File property was set successfully." >> "$logfile"
     else
