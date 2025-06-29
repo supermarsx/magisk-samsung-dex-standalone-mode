@@ -19,7 +19,7 @@ error_count=0
 error_message=""
 logfile="$module_log_file_fullpath"
 
-# error_count_up()
+# increment_error_count()
 #   Increase error count
 increment_error_count() {
     echo " [INFO] Incrementing error by 1." >> "$logfile"
