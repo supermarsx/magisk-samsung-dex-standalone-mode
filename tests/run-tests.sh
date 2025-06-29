@@ -396,6 +396,9 @@ fi
 # Build module creation test
 assert_return 0 tests/test-build-create-module.sh
 
+# Build module deletion test
+assert_return 0 tests/test-build-delete-module.sh
+
 if [ "$failure" -eq 0 ]; then
   echo "All tests passed"
 else
