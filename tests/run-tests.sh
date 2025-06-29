@@ -172,6 +172,23 @@ else
   failure=1
 fi
 
+# Override file_set_property to handle slashes for warning test
+file_set_property() {
+  sed -i -E "s|$2=.*$|$2=$3|" "$1"
+}
+
+# Module status warning helper
+error_count=2
+error_message="foo"
+assert_return 0 module_set_status
+if grep -q 'WARN/ERROR' "$module_prop_fullpath" && \
+   grep -q '(2) error(s)' "$module_prop_fullpath"; then
+  echo "PASSED: module_set_status warn"
+else
+  echo "FAILED: module_set_status warn"
+  failure=1
+fi
+
 # Permission helper
 touch /tmp/permfile
 assert_return 0 set_permissions /tmp/permfile
