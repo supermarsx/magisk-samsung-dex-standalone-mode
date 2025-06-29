@@ -323,6 +323,49 @@ else
   failure=1
 fi
 
+# Test mount utilities
+MOUNT_RC=0
+error_count=0
+: > "$logfile"
+mount_file /tmp/src.bind /tmp/dest.bind
+rc=$?
+if [ "$rc" -eq 0 ]; then
+  echo "PASSED: mount_file success"
+else
+  echo "FAILED: mount_file success"
+  failure=1
+fi
+if grep -q 'Mount bind was successful.' "$logfile"; then
+  echo "PASSED: mount_file log success"
+else
+  echo "FAILED: mount_file log success"
+  failure=1
+fi
+
+MOUNT_RC=1
+error_count=0
+: > "$logfile"
+mount_file /tmp/src.bind /tmp/dest.bind || true
+rc=$?
+if [ "$rc" -eq 0 ]; then
+  echo "PASSED: mount_file failure"
+else
+  echo "FAILED: mount_file failure"
+  failure=1
+fi
+if [ "$error_count" -gt 0 ]; then
+  echo "PASSED: mount_file error count"
+else
+  echo "FAILED: mount_file error count"
+  failure=1
+fi
+if grep -q 'Mount bind failed.' "$logfile"; then
+  echo "PASSED: mount_file log failure"
+else
+  echo "FAILED: mount_file log failure"
+  failure=1
+fi
+
 # Test XML utilities
 cat > /tmp/xml_add.xml <<EOF
 <a>foo</a>
