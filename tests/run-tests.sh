@@ -2,6 +2,8 @@
 set -e
 
 export logfile=/tmp/test.log
+# Ensure clean log for each run
+: > "$logfile"
 export MODPATH=/tmp/mod
 mkdir -p "$MODPATH"
 
