@@ -3,9 +3,7 @@ name: Build Release
 on:
   push:
     tags:
-      - '*'
-  release:
-    types: [published]
+      - 'v*'
 
 jobs:
   build:
@@ -19,8 +17,7 @@ jobs:
         with:
           name: magisk-samsung-dex-standalone-mode
           path: magisk-samsung-dex-standalone-mode.zip
-      - name: Upload release asset
-        if: github.event_name == 'release'
+      - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: magisk-samsung-dex-standalone-mode.zip
