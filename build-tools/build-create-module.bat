@@ -1,6 +1,9 @@
 @echo off
 setlocal enabledelayedexpansion
 
+:: Change to repository root
+pushd "%~dp0.."
+
 :: Startup message
 echo Creating module.
 
@@ -11,7 +14,7 @@ set ZIPFILE=magisk-samsung-dex-standalone-mode.zip
 echo ZIP module name, "%ZIPFILE%".
 
 :: List file
-set LISTFILE=build-filelist.txt
+set LISTFILE=build-tools\build-filelist.txt
 
 :: Check if list file exists
 if not exist %LISTFILE% (
@@ -57,6 +60,7 @@ if not exist "%ZIPFILE%" (
 )
 echo Created ZIP module, "%ZIPFILE%".
 endlocal
+popd
 
 :: Quit script
 :quit
@@ -65,5 +69,7 @@ exit /b 0
 
 :: Quit with error
 :quit_with_error
+endlocal
+popd
 echo Critical error, quitting..
 exit /b 1
