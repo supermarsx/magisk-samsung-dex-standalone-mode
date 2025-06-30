@@ -8,7 +8,6 @@ Set-Location "$TmpDir\repo"
 
 # Provide required files for build script
 Copy-Item build-tools\build-filelist.txt build-filelist.txt
-Copy-Item build-tools\debug-unmount.sh debug-unmount.sh
 
 cmd /c build-tools\build-create-module.bat
 
@@ -28,7 +27,7 @@ $RequiredPaths = @(
     'module.prop',
     'post-fs-data.sh',
     'skip_mount',
-    'debug-unmount.sh',
+    'debug/debug-unmount.sh',
     'update.json'
 )
 foreach ($path in $RequiredPaths) {

@@ -50,12 +50,12 @@ A `Makefile` is also provided for convenience with the targets:
 
 Testing/debug related:
 
-`build-tools/debug-unmount.sh` - Simple unmount script.
+`debug/debug-unmount.sh` - Simple unmount script.
 
 Run it after testing the module to unmount the patched file:
 
 ```bash
-sh build-tools/debug-unmount.sh
+sh debug/debug-unmount.sh
 ```
 
 Every boot `post-fs-data.log` a new log file is generated with debugging information, existing log file is always overwritten keeping space footprint small. It's usually located inside the modules folder `/data/adb/modules/samsung-dex-standalone-mode`.
@@ -64,7 +64,7 @@ Every boot `post-fs-data.log` a new log file is generated with debugging informa
 
 Run `make build` from the repository root to create `magisk-samsung-dex-standalone-mode.zip` using the paths listed in `build-tools/build-filelist.txt`.
 Use `make clean` to remove a previously generated ZIP.
-During development `build-tools/debug-unmount.sh` can be used to unmount the patched file.
+During development `debug/debug-unmount.sh` can be used to unmount the patched file.
 
 
 Check `floating_feature.xml` file values by using `su` and then `cat /system/etc/floating_feature.xml` using your preferred terminal interface.

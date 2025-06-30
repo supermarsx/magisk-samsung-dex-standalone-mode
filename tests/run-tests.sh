@@ -35,8 +35,8 @@ sed '$d' post-fs-data.sh > /tmp/pfsd.sh
 sed '$d' customize.sh > /tmp/customize.sh
 # shellcheck source=customize.sh
 . /tmp/customize.sh
-sed '$d' build-tools/debug-unmount.sh > /tmp/debug-unmount.sh
-# shellcheck source=build-tools/debug-unmount.sh
+sed '$d' debug/debug-unmount.sh > /tmp/debug-unmount.sh
+# shellcheck source=debug/debug-unmount.sh
 . /tmp/debug-unmount.sh
 # Re-source post-fs-data functions to override debug replacements
 # shellcheck source=post-fs-data.sh

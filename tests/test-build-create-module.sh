@@ -8,7 +8,6 @@ cd "$TMPDIR/repo"
 
 # Provide required files for build script
 ln -s build-tools/build-filelist.txt build-filelist.txt
-ln -s build-tools/debug-unmount.sh debug-unmount.sh
 
 bash build-tools/build-create-module.sh
 
@@ -28,7 +27,7 @@ required_paths=(
   "module.prop"
   "post-fs-data.sh"
   "skip_mount"
-  "debug-unmount.sh"
+  "debug/debug-unmount.sh"
   "update.json"
 )
 
