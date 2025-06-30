@@ -17,17 +17,19 @@ mount() { return "${MOUNT_RC:-0}"; }
 # Source scripts without executing main
 # Generate temporary versions of the sourced scripts without their final lines
 sed '$d' post-fs-data.sh > /tmp/pfsd.sh
-# shellcheck source=/tmp/pfsd.sh disable=SC1091
+# shellcheck source=post-fs-data.sh
 . /tmp/pfsd.sh
 sed '$d' customize.sh > /tmp/customize.sh
-# shellcheck source=/tmp/customize.sh disable=SC1091
+# shellcheck source=customize.sh
 . /tmp/customize.sh
 sed '$d' build-tools/debug-unmount.sh > /tmp/debug-unmount.sh
-# shellcheck source=/tmp/debug-unmount.sh disable=SC1091
+# shellcheck source=build-tools/debug-unmount.sh
 . /tmp/debug-unmount.sh
 # Re-source post-fs-data functions to override debug replacements
+# shellcheck source=post-fs-data.sh
 . /tmp/pfsd.sh
 # Restore customize functions overridden above
+# shellcheck source=customize.sh
 . /tmp/customize.sh
 
 logfile="/tmp/test.log"
@@ -54,7 +56,7 @@ install_process_wrapper() {
 post_fs_process_wrapper() {
   module_dir="$module_path/$module_name/"
   logfile="/tmp/test.log"
-  module_log_file_fullpath="$logfile"
+  export module_log_file_fullpath="$logfile"
   floating_feature_xml_dir="/tmp/"
   floating_feature_xml_fullpath="${floating_feature_xml_dir}${floating_feature_xml_file}"
   floating_feature_xml_patched_fullpath="${module_dir}${floating_feature_xml_patched_file}"
