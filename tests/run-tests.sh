@@ -13,6 +13,12 @@ chcon() { true; }
 set_perm_recursive() { true; }
 umount() { return "${UMOUNT_RC:-0}"; }
 mount() { return "${MOUNT_RC:-0}"; }
+cp() {
+  if [ "${CP_RC:-0}" -ne 0 ]; then
+    return "$CP_RC"
+  fi
+  command cp "$@"
+}
 
 # Source scripts without executing main
 # Generate temporary versions of the sourced scripts without their final lines
@@ -483,6 +489,30 @@ else
   echo "FAILED: post_fs_process warn status"
   failure=1
 fi
+
+# Simulate copy failure during post_fs_process
+CP_RC=1
+MOUNT_RC=0
+assert_return 0 post_fs_process_wrapper
+if [ ! -f "$floating_feature_xml_patched_fullpath" ]; then
+  echo "PASSED: post_fs_process copy failure file"
+else
+  echo "FAILED: post_fs_process copy failure file"
+  failure=1
+fi
+if [ "$error_count" -gt 0 ]; then
+  echo "PASSED: post_fs_process copy failure error count"
+else
+  echo "FAILED: post_fs_process copy failure error count"
+  failure=1
+fi
+if grep -q 'WARN/ERROR' "$module_prop_fullpath"; then
+  echo "PASSED: post_fs_process copy failure warn status"
+else
+  echo "FAILED: post_fs_process copy failure warn status"
+  failure=1
+fi
+CP_RC=0
 
 # Build module creation test
 assert_return 0 tests/test-build-create-module.sh
