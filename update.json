@@ -1,6 +1,6 @@
 {
-    "version": "2024.2",
-    "versionCode": "2",
+    "version": "2025.1",
+    "versionCode": "3",
     "zipUrl": "https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/releases/latest/download/magisk-samsung-dex-standalone-mode.zip",
     "changelog": "https://raw.githubusercontent.com/supermarsx/magisk-samsung-dex-standalone-mode/main/changelog.md"
 }

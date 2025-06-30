@@ -160,6 +160,10 @@ Thanks to @WilsonBradley and @foxypiratecove37350 for their questions, adapted f
 
 ## Changelog
 
+2025.1
+- Add release automation script
+- Resolve shellcheck warnings
+
 2024.2
 - Build/debug scripts restructured
 - Module status bug fix, kept adding onto olders statuses on reboot
