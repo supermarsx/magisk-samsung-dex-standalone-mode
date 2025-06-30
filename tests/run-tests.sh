@@ -8,11 +8,17 @@ export MODPATH=/tmp/mod
 mkdir -p "$MODPATH"
 
 ui_print() { :; }
-abort() { return 1; }
+abort() {
+  return 1
+}
 chcon() { true; }
 set_perm_recursive() { true; }
-umount() { return "${UMOUNT_RC:-0}"; }
-mount() { return "${MOUNT_RC:-0}"; }
+umount() {
+  return "${UMOUNT_RC:-0}"
+}
+mount() {
+  return "${MOUNT_RC:-0}"
+}
 cp() {
   if [ "${CP_RC:-0}" -ne 0 ]; then
     return "$CP_RC"
