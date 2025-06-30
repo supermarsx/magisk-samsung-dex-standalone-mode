@@ -1,5 +1,4 @@
 #!/system/bin/sh
-set -eu
 
 # Unmount variables
 floating_feature_xml_original_fullpath="/system/etc/floating_feature.xml"

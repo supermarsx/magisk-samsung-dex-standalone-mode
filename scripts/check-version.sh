@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 PROP_FILE="module.prop"
 JSON_FILE="update.json"
