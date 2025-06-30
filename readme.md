@@ -135,7 +135,7 @@ See [Issue 4](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/i
 
 ## Questions & Answers
 
-Thanks to @WilsonBradley and @foxypiratecove37350 for their questions, adapted for comprehension.
+Thanks to [@WilsonBradley](https://github.com/WilsonBradley) and [@foxypiratecove37350](https://github.com/foxypiratecove37350) for their questions, adapted for comprehension.
 
 **Q. Does this require a Samsung device?**
 - **A.** It does indeed, a Samsung but more precisely a Samsung based ROM with DeX in it.
