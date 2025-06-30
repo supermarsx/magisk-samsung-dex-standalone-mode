@@ -379,7 +379,7 @@ file_set_xml_key() {
                 return 1   
             fi
         else
-            return 0
+            return 1
         fi
     else
         error_add "fileexists"
