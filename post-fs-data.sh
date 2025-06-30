@@ -1,5 +1,4 @@
 #!/system/bin/sh
-set -eu
 
 # General variables
 module_name="samsung-dex-standalone-mode"
