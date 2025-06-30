@@ -23,13 +23,13 @@ sed -i -E "s/^version=.*/version=${new_version}/" "$PROP_FILE"
 sed -i -E "s/^versionCode=.*/versionCode=${new_increment}/" "$PROP_FILE"
 
 # Update update.json
-sed -i -E "s/(\"version\"[[:space:]]*:[[:space:]]*)\"[^"]*\"/\1\"${new_version}\"/" "$JSON_FILE"
-sed -i -E "s/(\"versionCode\"[[:space:]]*:[[:space:]]*)\"[^"]*\"/\1\"${new_increment}\"/" "$JSON_FILE"
+sed -i -E 's/("version"[[:space:]]*:[[:space:]]*)"[^"]*"/\1"'"${new_version}"'"/' "$JSON_FILE"
+sed -i -E 's/("versionCode"[[:space:]]*:[[:space:]]*)"[^"]*"/\1"'"${new_increment}"'"/' "$JSON_FILE"
 
 # Build module zip
 bash build-tools/build-create-module.sh
 
 # Commit and tag
 git add "$PROP_FILE" "$JSON_FILE"
- git commit -m "chore: release ${new_version}" && git tag "v${new_version}"
+git commit -m "chore: release ${new_version}" && git tag "v${new_version}"
 
