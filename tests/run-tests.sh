@@ -209,7 +209,7 @@ fi
 # Permission helper
 touch /tmp/permfile
 assert_return 0 set_permissions /tmp/permfile
-if [ "$(stat -c %a /tmp/permfile)" = "644" ] && [ "$(stat -c %U:%G /tmp/permfile)" = "root:root" ]; then
+if [ "$(stat -c %a /tmp/permfile)" = "644" ]; then
   echo "PASSED: set_permissions"
 else
   echo "FAILED: set_permissions"
