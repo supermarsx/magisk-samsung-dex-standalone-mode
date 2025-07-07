@@ -10,8 +10,8 @@ Magisk module to systemlessly enable Samsung DeX standalone mode by patching `fl
 [![GitHub Stars](https://img.shields.io/github/stars/supermarsx/magisk-samsung-dex-standalone-mode?style=flat-square&label=Stars)](#)
 [![GitHub Forks](https://img.shields.io/github/forks/supermarsx/magisk-samsung-dex-standalone-mode?style=flat-square&label=Forks)](#)
 [![GitHub Watchers](https://img.shields.io/github/watchers/supermarsx/magisk-samsung-dex-standalone-mode?style=flat-square&label=Watchers)](#)
-[![CI](https://img.shields.io/github/actions/workflow/status/supermarsx/magisk-samsung-dex-standalone-mode/ci.yml?style=flat-square&label=CI)](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/actions/workflows/ci.yml)
 [![GitHub repo size](https://img.shields.io/github/repo-size/supermarsx/magisk-samsung-dex-standalone-mode?style=flat-square&label=Repo%20Size)](#)
+[![CI](https://img.shields.io/github/actions/workflow/status/supermarsx/magisk-samsung-dex-standalone-mode/ci.yml?style=flat-square&label=CI)](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/actions/workflows/ci.yml)
 [![GitHub Downloads](https://img.shields.io/github/downloads/supermarsx/magisk-samsung-dex-standalone-mode/total.svg?style=flat-square&label=Downloads)](https://codeload.github.com/supermarsx/magisk-samsung-dex-standalone-mode/zip/refs/heads/main)
 [![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/supermarsx/magisk-samsung-dex-standalone-mode?style=flat-square&label=Issues)](#)
 
