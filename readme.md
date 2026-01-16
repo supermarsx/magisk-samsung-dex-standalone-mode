@@ -138,25 +138,28 @@ See [Issue 4](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/i
 Thanks to [@WilsonBradley](https://github.com/WilsonBradley) and [@foxypiratecove37350](https://github.com/foxypiratecove37350) for their questions, adapted for comprehension.
 
 **Q. Does this require a Samsung device?**
-- **A.** It does indeed, a Samsung but more precisely a Samsung based ROM with DeX in it.
+- **A.** Yes, it does indeed, a Samsung but more precisely a Samsung One UI based ROM with DeX in it.
 
 **Q. By "Standalone mode" - does this mean DeX can be started on device itself at will (no HDMI connection required)?**
 - **A.** YES, this what the module actually pretends to solve.
 
 **Q. Could DeX be screen shared to another Android device?**
-- **A.** This is a Android/DeX specific question but my guess is no?, if you know better open an issue.
+- **A.** No, not by using this module in itself. This is a Android/DeX specific question but my guess is no, if you know better open an issue.
 
 **Q. Can it work on non-Samsung devices, or Samsung devices that don't support DeX?**
 - **A.** Short is answer no. Long answer is any Samsung based ROM that has DeX can be used somehow, not at my level of interest though.
 
 **Q. Can it work if the Samsung device has a custom ROM?**
-- **A.** Maybe, if the custom ROM is stock/One UI based and has DeX it will work.
+- **A.** Maybe. That will depend if the custom ROM you're using is stock/One UI based and has DeX it will work.
 
 **Q. What are the requirements to run this?**
 - **A.** Please check "module requirements" for more information.
 
 **Q. Will this add DeX to my phone?**
-- **A.** No.
+- **A.** No. This only activates standalone mode on phones that already have DeX.
+
+**Q. I have the S23 Ultra or some other high-end Samsung phone, will standalone work by itself without the module?**
+- **A.** No. Standalone mode is made mostly for bigger screens not phone screens.
 
 ## Changelog
 
