@@ -12,13 +12,13 @@ versionCode_json=$(grep -o '"versionCode"[[:space:]]*:[[:space:]]*"[^"]*"' "$JSO
 status=0
 
 if [ "$version_prop" != "$version_json" ]; then
-  echo "Version mismatch: module.prop has '$version_prop' but update.json has '$version_json'"
-  status=1
+	echo "Version mismatch: module.prop has '$version_prop' but update.json has '$version_json'"
+	status=1
 fi
 
 if [ "$versionCode_prop" != "$versionCode_json" ]; then
-  echo "VersionCode mismatch: module.prop has '$versionCode_prop' but update.json has '$versionCode_json'"
-  status=1
+	echo "VersionCode mismatch: module.prop has '$versionCode_prop' but update.json has '$versionCode_json'"
+	status=1
 fi
 
 exit $status

@@ -10,9 +10,9 @@ current_increment=${current_version##*.}
 current_year_now=$(date +%Y)
 
 if [ "$current_year_now" != "$current_year" ]; then
-  new_increment=1
+	new_increment=1
 else
-  new_increment=$((current_increment + 1))
+	new_increment=$((current_increment + 1))
 fi
 
 new_version="${current_year_now}.${new_increment}"
@@ -31,4 +31,3 @@ bash build-tools/build-create-module.sh
 # Commit and tag
 git add "$PROP_FILE" "$JSON_FILE"
 git commit -m "chore: release ${new_version}" && git tag "v${new_version}"
-

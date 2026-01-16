@@ -14,8 +14,8 @@ touch "$ZIPFILE"
 bash build-tools/build-delete-module.sh
 
 if [ -f "$ZIPFILE" ]; then
-  echo "ZIP not deleted"
-  exit 1
+	echo "ZIP not deleted"
+	exit 1
 fi
 
 echo "build-delete-module test passed"

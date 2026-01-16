@@ -8,8 +8,8 @@ floating_feature_xml_original_fullpath="/system/etc/floating_feature.xml"
 #
 # %usage: error_add message
 error_add() {
-    ea_value="$1"
-    echo " [ERR!] Operation failed: $ea_value"
+	ea_value="$1"
+	echo " [ERR!] Operation failed: $ea_value"
 }
 
 # unmount_file()
@@ -19,22 +19,22 @@ error_add() {
 # parameters
 #   target_path - Destination file path to unmount
 unmount_file() {
-    uf_destination_path="$1"
+	uf_destination_path="$1"
 
-    echo " [INFO] Unmounting."
-    if umount "$uf_destination_path"; then
-        echo " [INFO] Unmount was successful."
-    else
-        error_add "mount.bind"
-        echo " [ERR!] Unmount failed."
-    fi
+	echo " [INFO] Unmounting."
+	if umount "$uf_destination_path"; then
+		echo " [INFO] Unmount was successful."
+	else
+		error_add "mount.bind"
+		echo " [ERR!] Unmount failed."
+	fi
 }
 
 # process_unmount()
 #   Process unmount
 process_unmount() {
-    pu_unmount_target="$floating_feature_xml_original_fullpath"
-    unmount_file "$pu_unmount_target"
+	pu_unmount_target="$floating_feature_xml_original_fullpath"
+	unmount_file "$pu_unmount_target"
 }
 
 process_unmount
