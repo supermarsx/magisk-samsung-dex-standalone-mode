@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
 
 jobs:
@@ -14,6 +14,14 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y shellcheck
       - name: Run ShellCheck
         run: shellcheck $(git ls-files '*.sh')
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install shfmt
+        run: sudo apt-get update && sudo apt-get install -y shfmt
+      - name: Check shell formatting
+        run: shfmt -d $(git ls-files '*.sh')
   test:
     runs-on: ubuntu-latest
     steps:
@@ -23,14 +31,14 @@ jobs:
       - name: Run shell tests
         run: bash tests/run-tests.sh
   package:
-    needs: test
+    needs: [lint, format, test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Verify ZIP creation
         run: bash tests/test-build-create-module.sh
   package-windows:
-    needs: test
+    needs: [lint, format, test]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
