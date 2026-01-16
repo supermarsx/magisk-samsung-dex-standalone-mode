@@ -14,6 +14,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Set version from tag
+        run: |
+          TAG_NAME="${GITHUB_REF_NAME#refs/tags/}"
+          VERSION="${TAG_NAME#v}"
+          VERSION_CODE_CURRENT=$(grep '^versionCode=' module.prop | cut -d= -f2)
+          VERSION_CODE=$((VERSION_CODE_CURRENT + 1))
+          bash build-tools/set-version.sh "$VERSION" "$VERSION_CODE"
+
       - name: Ensure version matches tag
         run: |
           TAG_NAME="${GITHUB_REF_NAME#refs/tags/}"
