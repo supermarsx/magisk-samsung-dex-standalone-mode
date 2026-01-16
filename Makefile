@@ -1,4 +1,4 @@
-.PHONY: build clean test lint format package run-all release help
+.PHONY: build clean test lint format package run-all release help set-version update-changelog prepare-release
 
 SHELL := /usr/bin/env bash
 
@@ -19,6 +19,19 @@ run-all:
 
 release:
 	@bash build-tools/release.sh
+
+set-version:
+	@if [ -z "$(VERSION)" ] || [ -z "$(VERSION_CODE)" ]; then echo "Set VERSION and VERSION_CODE"; exit 1; fi
+	@bash build-tools/set-version.sh $(VERSION) $(VERSION_CODE)
+
+update-changelog:
+	@if [ -z "$(VERSION)" ] || [ -z "$(NOTES)" ]; then echo "Set VERSION and NOTES (path to notes file)"; exit 1; fi
+	@bash build-tools/update-changelog.sh $(VERSION) $(NOTES)
+
+prepare-release:
+	@$(MAKE) set-version VERSION=$(VERSION) VERSION_CODE=$(VERSION_CODE)
+	@$(MAKE) update-changelog VERSION=$(VERSION) NOTES=$(NOTES)
+	@$(MAKE) run-all
 
 clean:
 	@bash build-tools/build-delete-module.sh

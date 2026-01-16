@@ -17,6 +17,17 @@ Assert-Command shellcheck
 Assert-Command shfmt
 Assert-Command bash
 
+$Version = $env:VERSION
+$VersionCode = $env:VERSION_CODE
+$NotesFile = $env:CHANGELOG_NOTES_FILE
+
+if (-not $Version -or -not $VersionCode -or -not $NotesFile) {
+    throw 'Set VERSION, VERSION_CODE, and CHANGELOG_NOTES_FILE before running release.'
+}
+
+bash build-tools/set-version.sh $Version $VersionCode
+bash build-tools/update-changelog.sh $Version $NotesFile
+
 bash build-tools/lint.sh
 bash build-tools/format.sh
 bash build-tools/test.sh

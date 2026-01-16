@@ -16,6 +16,18 @@ require shfmt
 require bash
 require zip
 
+VERSION=${VERSION:-}
+VERSION_CODE=${VERSION_CODE:-}
+CHANGELOG_NOTES_FILE=${CHANGELOG_NOTES_FILE:-}
+
+if [[ -z "$VERSION" || -z "$VERSION_CODE" || -z "$CHANGELOG_NOTES_FILE" ]]; then
+	echo "Set VERSION, VERSION_CODE, and CHANGELOG_NOTES_FILE before running release." >&2
+	exit 1
+fi
+
+bash build-tools/set-version.sh "$VERSION" "$VERSION_CODE"
+bash build-tools/update-changelog.sh "$VERSION" "$CHANGELOG_NOTES_FILE"
+
 bash build-tools/lint.sh
 bash build-tools/format.sh
 bash build-tools/test.sh

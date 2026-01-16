@@ -1,0 +1,24 @@
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+
+param(
+    [Parameter(Mandatory = $true)][string]$Version,
+    [Parameter(Mandatory = $true)][string]$VersionCode
+)
+
+$repoRoot = Split-Path -Parent $PSScriptRoot
+Set-Location $repoRoot
+
+$propFile = Join-Path $repoRoot 'module.prop'
+$jsonFile = Join-Path $repoRoot 'update.json'
+foreach ($file in @($propFile, $jsonFile)) {
+    if (-not (Test-Path $file)) {
+        throw "Missing file: $file"
+    }
+}
+
+(Get-Content $propFile) -replace '^version=.*$', "version=$Version" -replace '^versionCode=.*$', "versionCode=$VersionCode" | Set-Content $propFile
+
+(Get-Content $jsonFile) -replace '"version"\s*:\s*"[^"]*"', '"version": ' + '"' + $Version + '"' -replace '"versionCode"\s*:\s*"[^"]*"', '"versionCode": ' + '"' + $VersionCode + '"' | Set-Content $jsonFile
+
+Write-Host "Updated module.prop and update.json to version $Version (code $VersionCode)."

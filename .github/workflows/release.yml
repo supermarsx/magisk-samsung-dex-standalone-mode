@@ -3,20 +3,47 @@ name: Build Release
 on:
   push:
     tags:
-      - '*'
+      - "*"
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Build module
-        run: bash build-tools/build-create-module.sh
+
+      - name: Ensure version matches tag
+        run: |
+          TAG_NAME="${GITHUB_REF_NAME#refs/tags/}"
+          VERSION="${TAG_NAME#v}"
+          module_version=$(grep '^version=' module.prop | cut -d= -f2)
+          if [ "$module_version" != "$VERSION" ]; then
+            echo "Version mismatch: tag $VERSION vs module.prop $module_version"
+            exit 1
+          fi
+
+      - name: Install tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck shfmt zip
+
+      - name: Verify changelog entry exists
+        run: |
+          TAG_NAME="${GITHUB_REF_NAME#refs/tags/}"
+          VERSION="${TAG_NAME#v}"
+          grep -q "## v${VERSION}" changelog.md
+
+      - name: Run lint/format/test/package
+        run: bash build-tools/run-all.sh
+
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: magisk-samsung-dex-standalone-mode
           path: magisk-samsung-dex-standalone-mode.zip
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
