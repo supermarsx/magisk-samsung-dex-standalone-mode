@@ -38,7 +38,7 @@ if (-not (Test-Path $zipFile)) {
     throw "Package not found: $zipFile"
 }
 
-$versionLine = (Select-String -Path (Join-Path $RepoRoot 'module.prop') -Pattern '^version=').Matches.Value
+$versionLine = (Select-String -Path (Join-Path $RepoRoot 'module.prop') -Pattern '^version=').Line
 if (-not $versionLine) {
     throw 'Unable to read version from module.prop'
 }
