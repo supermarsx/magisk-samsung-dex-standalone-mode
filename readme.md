@@ -87,6 +87,39 @@ Tests are also executed automatically in the CI pipeline.
 
 A GitHub Actions workflow builds the module whenever a tag is pushed or a release is published. The resulting `magisk-samsung-dex-standalone-mode.zip` is saved as a workflow artifact and attached to the release.
 
+### Version Management Scripts
+
+Several scripts handle version updates and releases:
+
+| Script | Purpose |
+|--------|---------|
+| `build-tools/set-version.sh` | Updates `module.prop` and `update.json` with specified version |
+| `build-tools/update-changelog.sh` | Prepends new version entry to `changelog.md` |
+| `scripts/check-version.sh` | Verifies `module.prop` and `update.json` are in sync |
+| `scripts/build-and-commit.sh` | Auto-increments version, updates files, builds, commits & tags |
+| `build-tools/release.sh` | Full release: sets version, updates changelog, lints, tests, packages, tags, and publishes to GitHub |
+
+**Full release** (updates everything + publishes to GitHub):
+```bash
+VERSION=2026.1 VERSION_CODE=4 CHANGELOG_NOTES_FILE=notes.txt bash build-tools/release.sh
+```
+
+**Auto-increment release** (calculates next version automatically):
+```bash
+bash scripts/build-and-commit.sh
+```
+
+**Manual version update**:
+```bash
+bash build-tools/set-version.sh 2026.1 4
+bash build-tools/update-changelog.sh 2026.1 notes.txt
+```
+
+**Verify versions are in sync**:
+```bash
+bash scripts/check-version.sh
+```
+
 ## Manual installation
 
 After building the ZIP you can install it directly with Magisk:
