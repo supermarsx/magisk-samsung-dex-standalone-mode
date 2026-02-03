@@ -20,6 +20,6 @@ sed -i -E "s/^version=.*/version=${version}/" module.prop
 sed -i -E "s/^versionCode=.*/versionCode=${version_code}/" module.prop
 
 sed -i -E 's/("version"[[:space:]]*:[[:space:]]*)"[^"]*"/\1"'"${version}"'"/' update.json
-sed -i -E 's/("versionCode"[[:space:]]*:[[:space:]]*)[0-9]+/\1'"${version_code}"'/' update.json
+sed -i -E 's/("versionCode"[[:space:]]*:[[:space:]]*)[^,]*/\1"'"${version_code}"'"/' update.json
 
 echo "Updated module.prop and update.json to version ${version} (code ${version_code})."
