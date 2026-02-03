@@ -43,6 +43,7 @@ assert_file_contains() {
 	fi
 }
 
+# shellcheck disable=SC2317
 assert_file_not_contains() {
 	local file=$1
 	local pattern=$2
@@ -214,8 +215,7 @@ EOF
 	bash "$REPO_ROOT/build-tools/update-changelog.sh" "2026.1" "notes.txt"
 
 	# Check new entry is at the top
-	head -1 changelog.md | grep -q "## v2026.1"
-	if [ $? -eq 0 ]; then
+	if head -1 changelog.md | grep -q "## v2026.1"; then
 		pass "update-changelog prepends new version header"
 	else
 		fail "update-changelog prepends new version header"
