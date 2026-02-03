@@ -12,7 +12,16 @@
 module_name="samsung-dex-standalone-mode"
 module_path="/data/adb/modules"
 floating_feature_xml_file="floating_feature.xml"
-floating_feature_xml_dir="/system/etc/"
+
+# Check for correct floating_feature.xml path
+if [ -f "/system/vendor/etc/floating_feature.xml" ]; then
+    floating_feature_xml_dir="/system/vendor/etc/"
+elif [ -f "/vendor/etc/floating_feature.xml" ]; then
+    floating_feature_xml_dir="/vendor/etc/"
+else
+    floating_feature_xml_dir="/system/etc/"
+fi
+
 floating_feature_xml_fullpath="$floating_feature_xml_dir$floating_feature_xml_file"
 floating_feature_xml_dex_key="SEC_FLOATING_FEATURE_COMMON_CONFIG_DEX_MODE"
 floating_feature_xml_dex_key_value="standalone"
