@@ -41,7 +41,7 @@ jobs:
         run: |
           TAG_NAME="${GITHUB_REF_NAME#refs/tags/}"
           VERSION="${TAG_NAME#v}"
-          grep -q "## v${VERSION}" changelog.md
+          grep -q "^${VERSION}$" changelog.md
 
       - name: Run lint/format/test/package
         run: bash build-tools/run-all.sh
