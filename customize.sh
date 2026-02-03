@@ -15,11 +15,11 @@ floating_feature_xml_file="floating_feature.xml"
 
 # Check for correct floating_feature.xml path
 if [ -f "/system/vendor/etc/floating_feature.xml" ]; then
-    floating_feature_xml_dir="/system/vendor/etc/"
+	floating_feature_xml_dir="/system/vendor/etc/"
 elif [ -f "/vendor/etc/floating_feature.xml" ]; then
-    floating_feature_xml_dir="/vendor/etc/"
+	floating_feature_xml_dir="/vendor/etc/"
 else
-    floating_feature_xml_dir="/system/etc/"
+	floating_feature_xml_dir="/system/etc/"
 fi
 
 floating_feature_xml_fullpath="$floating_feature_xml_dir$floating_feature_xml_file"
