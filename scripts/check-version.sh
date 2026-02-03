@@ -1,4 +1,5 @@
 #!/bin/bash
+set -uo pipefail
 
 PROP_FILE="module.prop"
 JSON_FILE="update.json"
@@ -7,7 +8,8 @@ version_prop=$(grep '^version=' "$PROP_FILE" | cut -d= -f2)
 versionCode_prop=$(grep '^versionCode=' "$PROP_FILE" | cut -d= -f2)
 
 version_json=$(grep -o '"version"[[:space:]]*:[[:space:]]*"[^"]*"' "$JSON_FILE" | head -n1 | sed 's/.*"version"[[:space:]]*:[[:space:]]*"//;s/"$//')
-versionCode_json=$(grep -o '"versionCode"[[:space:]]*:[[:space:]]*"[^"]*"' "$JSON_FILE" | head -n1 | sed 's/.*"versionCode"[[:space:]]*:[[:space:]]*"//;s/"$//')
+# Handle versionCode as either integer or string in JSON
+versionCode_json=$(grep -oE '"versionCode"[[:space:]]*:[[:space:]]*(\"?)[0-9]+(\"?)' "$JSON_FILE" | head -n1 | sed 's/.*"versionCode"[[:space:]]*:[[:space:]]*"*//;s/"*$//')
 
 status=0
 

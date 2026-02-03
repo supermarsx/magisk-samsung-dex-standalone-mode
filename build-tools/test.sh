@@ -8,3 +8,4 @@ bash scripts/check-version.sh
 bash tests/run-tests.sh
 bash tests/test-build-create-module.sh
 bash tests/test-build-delete-module.sh
+bash tests/test-release-scripts.sh

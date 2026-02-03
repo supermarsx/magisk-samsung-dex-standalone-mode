@@ -532,6 +532,9 @@ assert_return 0 tests/test-build-create-module.sh
 # Build module deletion test
 assert_return 0 tests/test-build-delete-module.sh
 
+# Release scripts tests
+assert_return 0 tests/test-release-scripts.sh
+
 if [ "$failure" -eq 0 ]; then
 	echo "All tests passed"
 else

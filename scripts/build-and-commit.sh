@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 PROP_FILE="module.prop"
 JSON_FILE="update.json"
@@ -23,7 +24,7 @@ sed -i -E "s/^versionCode=.*/versionCode=${new_increment}/" "$PROP_FILE"
 
 # Update update.json
 sed -i -E 's/("version"[[:space:]]*:[[:space:]]*)"[^"]*"/\1"'"${new_version}"'"/' "$JSON_FILE"
-sed -i -E 's/("versionCode"[[:space:]]*:[[:space:]]*)"[^"]*"/\1"'"${new_increment}"'"/' "$JSON_FILE"
+sed -i -E 's/("versionCode"[[:space:]]*:[[:space:]]*)[0-9]+/\1'"${new_increment}"'/' "$JSON_FILE"
 
 # Build module zip
 bash build-tools/build-create-module.sh
