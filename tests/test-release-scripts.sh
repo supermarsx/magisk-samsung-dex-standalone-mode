@@ -85,7 +85,7 @@ EOF
 	cat >update.json <<EOF
 {
     "version": "1.0.0",
-    "versionCode": 1
+    "versionCode": "1"
 }
 EOF
 
@@ -106,7 +106,7 @@ EOF
 	cat >update.json <<EOF
 {
     "version": "1.0.0",
-    "versionCode": 1,
+    "versionCode": "1",
     "zipUrl": "https://example.com/test.zip"
 }
 EOF
@@ -141,7 +141,7 @@ test_set_version_fails_with_one_arg() {
 test_set_version_fails_missing_module_prop() {
 	setup
 	cat >update.json <<EOF
-{"version": "1.0.0", "versionCode": 1}
+{"version": "1.0.0", "versionCode": "1"}
 EOF
 	set +e
 	bash "$REPO_ROOT/build-tools/set-version.sh" "2026.1" "5" 2>/dev/null
@@ -179,7 +179,7 @@ EOF
 	cat >update.json <<EOF
 {
     "version": "2025.1",
-    "versionCode": 3,
+    "versionCode": "3",
     "zipUrl": "https://github.com/example/test.zip",
     "changelog": "https://example.com/changelog.md"
 }
@@ -328,7 +328,7 @@ EOF
 	cat >update.json <<EOF
 {
     "version": "2025.1",
-    "versionCode": 3
+    "versionCode": "3"
 }
 EOF
 
@@ -349,7 +349,7 @@ EOF
 	cat >update.json <<EOF
 {
     "version": "2026.1",
-    "versionCode": 3
+    "versionCode": "3"
 }
 EOF
 
@@ -376,7 +376,7 @@ EOF
 	cat >update.json <<EOF
 {
     "version": "2025.1",
-    "versionCode": 5
+    "versionCode": "5"
 }
 EOF
 
@@ -394,7 +394,7 @@ EOF
 	teardown
 }
 
-test_check_version_handles_integer_versioncode() {
+test_check_version_handles_quoted_versioncode() {
 	setup
 	cat >module.prop <<EOF
 version=2025.1
@@ -403,7 +403,7 @@ EOF
 	cat >update.json <<EOF
 {
     "version": "2025.1",
-    "versionCode": 42
+    "versionCode": "42"
 }
 EOF
 
@@ -411,7 +411,7 @@ EOF
 	bash "$REPO_ROOT/scripts/check-version.sh"
 	local rc=$?
 	set -e
-	assert_exit_code 0 "$rc" "check-version handles integer versionCode in JSON"
+	assert_exit_code 0 "$rc" "check-version handles quoted versionCode in JSON"
 	teardown
 }
 
@@ -424,7 +424,7 @@ EOF
 	cat >update.json <<EOF
 {
     "version": "2026.1",
-    "versionCode": 5
+    "versionCode": "5"
 }
 EOF
 
@@ -451,7 +451,7 @@ EOF
 	cat >update.json <<EOF
 {
     "version"   :   "2025.1",
-    "versionCode"  :  3
+    "versionCode"  :  "3"
 }
 EOF
 
@@ -478,7 +478,7 @@ EOF
 	cat >update.json <<EOF
 {
     "version": "${current_year}.5",
-    "versionCode": 5
+    "versionCode": "5"
 }
 EOF
 
@@ -541,7 +541,7 @@ EOF
 	cat >update.json <<EOF
 {
     "version": "1.0.0",
-    "versionCode": 1
+    "versionCode": "1"
 }
 EOF
 
@@ -597,7 +597,7 @@ EOF
 	cat >update.json <<EOF
 {
     "version": "2025.1",
-    "versionCode": 3,
+    "versionCode": "3",
     "zipUrl": "https://example.com/test.zip",
     "changelog": "https://example.com/changelog.md"
 }
@@ -621,7 +621,7 @@ EOF
 	assert_file_contains module.prop "^version=2026.1$" "full flow: module.prop version updated"
 	assert_file_contains module.prop "^versionCode=4$" "full flow: module.prop versionCode updated"
 	assert_file_contains update.json '"version": "2026.1"' "full flow: update.json version updated"
-	assert_file_contains update.json '"versionCode": 4' "full flow: update.json versionCode updated"
+	assert_file_contains update.json '"versionCode": "4"' "full flow: update.json versionCode updated"
 	assert_file_contains changelog.md "## v2026.1" "full flow: changelog has new version"
 	assert_file_contains changelog.md "New feature X" "full flow: changelog has notes"
 	assert_file_contains changelog.md "Previous release" "full flow: changelog preserves history"
@@ -664,7 +664,7 @@ echo "=== Testing check-version.sh ==="
 test_check_version_passes_when_synced
 test_check_version_fails_version_mismatch
 test_check_version_fails_versioncode_mismatch
-test_check_version_handles_integer_versioncode
+test_check_version_handles_quoted_versioncode
 test_check_version_detects_both_mismatches
 test_check_version_handles_whitespace_in_json
 
