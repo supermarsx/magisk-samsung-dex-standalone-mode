@@ -12,7 +12,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install ShellCheck
         run: sudo apt-get update && sudo apt-get install -y shellcheck
       - name: Run ShellCheck
@@ -20,7 +20,7 @@ jobs:
   format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install shfmt
         run: sudo apt-get update && sudo apt-get install -y shfmt
       - name: Check shell formatting
@@ -28,7 +28,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Check version consistency
         run: bash scripts/check-version.sh
       - name: Run shell tests
@@ -37,13 +37,13 @@ jobs:
     needs: [lint, format, test]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Verify ZIP creation
         run: bash tests/test-build-create-module.sh
   package-windows:
     needs: [lint, format, test]
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Verify ZIP creation on Windows
         run: pwsh tests/test-build-create-module.ps1
