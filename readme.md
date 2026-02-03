@@ -196,6 +196,10 @@ Thanks to [@WilsonBradley](https://github.com/WilsonBradley) and [@foxypiratecov
 
 ## Changelog
 
+2026.1
+- Add support for older phones such as S9, 10, Note 9 that use "system-as-root" partition layout thanks to [@serifpersia](https://github.com/serifpersia)
+- Minor fixes
+
 2025.1
 - Add release automation script
 - Resolve shellcheck warnings
