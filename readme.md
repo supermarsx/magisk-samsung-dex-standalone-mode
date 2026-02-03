@@ -15,206 +15,229 @@ Magisk module to systemlessly enable Samsung DeX standalone mode by patching `fl
 [![GitHub Downloads](https://img.shields.io/github/downloads/supermarsx/magisk-samsung-dex-standalone-mode/total.svg?style=flat-square&label=Downloads)](https://codeload.github.com/supermarsx/magisk-samsung-dex-standalone-mode/zip/refs/heads/main)
 [![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/supermarsx/magisk-samsung-dex-standalone-mode?style=flat-square&label=Issues)](#)
 
-
 [**[Download latest release]**](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/releases/latest/download/magisk-samsung-dex-standalone-mode.zip)
 
 [[Download repository]](https://codeload.github.com/supermarsx/magisk-samsung-dex-standalone-mode/zip/refs/heads/main)
 
-## Module requirements 
+## Table of Contents
 
-- Samsung One UI based ROM installed, either stock or custom, doesn't matter
-- Rooted phone with Magisk or KernelSU (aka KSU)
-- No potentially conflicting modules installed that change or interact with `floating_feature.xml`, overlapping modules will cause problems.
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Troubleshooting](#troubleshooting)
+- [FAQ](#faq)
+- [Development](#development)
+  - [Building](#building)
+  - [Testing](#testing)
+  - [Release Workflow](#release-workflow)
+- [Changelog](#changelog)
+- [License](#license)
 
-## Build Prerequisites
+## Requirements
 
-The build scripts require `bash` and the `zip` command to be installed and available in your PATH. Linux distributions usually provide them by default. Windows users can rely on WSL or Git Bash.
+- **Samsung One UI ROM** (stock or custom)
+- **Root access** via Magisk or KernelSU
+- **No conflicting modules** that modify `floating_feature.xml`
 
-## Other goodies
+## Installation
 
-There are shell `.sh` and batch `.bat` scripts to use according to your OS. They now live inside the `build-tools/` folder and are used for building and debugging the module.
+### Via Magisk/KernelSU App
 
-Build related:
+1. Download the [latest release](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/releases/latest/download/magisk-samsung-dex-standalone-mode.zip)
+2. Open Magisk or KernelSU app
+3. Go to Modules → Install from storage
+4. Select the downloaded ZIP
+5. Reboot
 
-`build-tools/build-create-module.*` - Generates a new distribution ready ZIP module for installation.
+### Via Terminal
 
-`build-tools/build-delete-module.*` - Delete the current generated ZIP from folder.
+```bash
+magisk --install-module path/to/magisk-samsung-dex-standalone-mode.zip
+```
 
-`build-tools/build-filelist.txt` - Lists all files and folders to be included in the distribution ready ZIP module.
+### Verify Installation
 
-A `Makefile` is also provided for convenience with the targets:
-`make build` - create the ZIP module.
-`make clean` - remove the generated module.
-`make test` - run the shell tests.
-`make lint` - run shellcheck on all scripts.
+Check the patched value with root access:
 
-Testing/debug related:
+```bash
+su -c "cat /system/etc/floating_feature.xml | grep DEX_MODE"
+```
 
-`debug/debug-unmount.sh` - Simple unmount script.
+## Troubleshooting
 
-Run it after testing the module to unmount the patched file:
+### Gesture Issues After Exiting DeX
+
+See [Issue #2](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/issues/2)
+
+### DeX Ignoring the Notch / Desktop Not Full Width
+
+See [Issue #3](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/issues/3)
+
+**Fix:** Change display cutout simulation to "Double cutout"  
+*Thanks to [@admiralsym](https://github.com/admiralsym)*
+
+1. Enable **Developer Options**: Settings → About phone → Software information → Tap "Build number" 7 times
+2. Go to **Settings → Developer options**
+3. Find **Simulate display with a cutout** → Select **Double cutout**
+
+### ZIP Install Error
+
+See [Issue #4](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/issues/4)
+
+**Fix:** Install manually via Termux  
+*Thanks to [@hzykiss](https://github.com/hzykiss)*
+
+```bash
+su
+magisk --install-module /path/to/module.zip
+```
+
+## FAQ
+
+<details>
+<summary><strong>Does this require a Samsung device?</strong></summary>
+
+Yes. Specifically a Samsung device running One UI with DeX support.
+</details>
+
+<details>
+<summary><strong>What does "standalone mode" mean?</strong></summary>
+
+It allows starting DeX directly on your phone screen without connecting to an external display via HDMI or wireless.
+</details>
+
+<details>
+<summary><strong>Can DeX be screen-shared to another Android device?</strong></summary>
+
+Not with this module. That would require a different solution.
+</details>
+
+<details>
+<summary><strong>Will this work on non-Samsung devices?</strong></summary>
+
+No. This module is specifically for Samsung devices with DeX.
+</details>
+
+<details>
+<summary><strong>Will this work on custom ROMs?</strong></summary>
+
+Only if the custom ROM is One UI-based and includes DeX.
+</details>
+
+<details>
+<summary><strong>Will this add DeX to my phone?</strong></summary>
+
+No. This only enables standalone mode on phones that already have DeX.
+</details>
+
+<details>
+<summary><strong>I have an S23 Ultra, does standalone work without this module?</strong></summary>
+
+No. Standalone mode isn't enabled by default on any Samsung phone, regardless of how high-end it is.
+</details>
+
+*Thanks to [@WilsonBradley](https://github.com/WilsonBradley) and [@foxypiratecove37350](https://github.com/foxypiratecove37350) for their questions.*
+
+## Development
+
+### Prerequisites
+
+- `bash` and `zip` in PATH
+- Linux, WSL, or Git Bash on Windows
+
+### Building
+
+```bash
+make build    # Create magisk-samsung-dex-standalone-mode.zip
+make clean    # Remove generated ZIP
+```
+
+Or use the scripts directly:
+
+```bash
+bash build-tools/build-create-module.sh    # Create ZIP
+bash build-tools/build-delete-module.sh    # Delete ZIP
+```
+
+The file list for the ZIP is defined in `build-tools/build-filelist.txt`.
+
+### Testing
+
+```bash
+make test     # Run all tests
+make lint     # Run shellcheck on all scripts
+```
+
+Tests run automatically in CI on every push.
+
+### Debugging
+
+A log file `post-fs-data.log` is generated on each boot at:
+```
+/data/adb/modules/samsung-dex-standalone-mode/post-fs-data.log
+```
+
+To unmount the patched file during development:
 
 ```bash
 sh debug/debug-unmount.sh
 ```
 
-Every boot `post-fs-data.log` a new log file is generated with debugging information, existing log file is always overwritten keeping space footprint small. It's usually located inside the modules folder `/data/adb/modules/samsung-dex-standalone-mode`.
+### Release Workflow
 
-## Building
+Releases are automated via GitHub Actions when a tag is pushed.
 
-Run `make build` from the repository root to create `magisk-samsung-dex-standalone-mode.zip` using the paths listed in `build-tools/build-filelist.txt`.
-Use `make clean` to remove a previously generated ZIP.
-During development `debug/debug-unmount.sh` can be used to unmount the patched file.
-
-
-Check `floating_feature.xml` file values by using `su` and then `cat /system/etc/floating_feature.xml` using your preferred terminal interface.
-
-## Testing
-
-Run the shell based tests from the repository root with:
-
-```bash
-make test
-```
-Lint all shell scripts with:
-```bash
-make lint
-```
-
-Tests are also executed automatically in the CI pipeline.
-
-## Release workflow
-
-A GitHub Actions workflow builds the module whenever a tag is pushed or a release is published. The resulting `magisk-samsung-dex-standalone-mode.zip` is saved as a workflow artifact and attached to the release.
-
-### Version Management Scripts
-
-Several scripts handle version updates and releases:
+#### Version Management Scripts
 
 | Script | Purpose |
 |--------|---------|
-| `build-tools/set-version.sh` | Updates `module.prop` and `update.json` with specified version |
-| `build-tools/update-changelog.sh` | Prepends new version entry to `changelog.md` |
-| `scripts/check-version.sh` | Verifies `module.prop` and `update.json` are in sync |
-| `scripts/build-and-commit.sh` | Auto-increments version, updates files, builds, commits & tags |
-| `build-tools/release.sh` | Full release: sets version, updates changelog, lints, tests, packages, tags, and publishes to GitHub |
+| `build-tools/set-version.sh` | Update version in `module.prop` and `update.json` |
+| `build-tools/update-changelog.sh` | Prepend new entry to `changelog.md` |
+| `build-tools/release.sh` | Full release: version, changelog, lint, test, package, tag, publish |
+| `scripts/check-version.sh` | Verify `module.prop` and `update.json` are in sync |
+| `scripts/build-and-commit.sh` | Auto-increment version, build, commit, and tag |
 
-**Full release** (updates everything + publishes to GitHub):
+#### Release Commands
+
+**Full release** (recommended):
 ```bash
-VERSION=2026.1 VERSION_CODE=4 CHANGELOG_NOTES_FILE=notes.txt bash build-tools/release.sh
+VERSION=2026.2 VERSION_CODE=5 CHANGELOG_NOTES_FILE=notes.txt bash build-tools/release.sh
 ```
 
-**Auto-increment release** (calculates next version automatically):
+**Auto-increment release**:
 ```bash
 bash scripts/build-and-commit.sh
 ```
 
 **Manual version update**:
 ```bash
-bash build-tools/set-version.sh 2026.1 4
-bash build-tools/update-changelog.sh 2026.1 notes.txt
+bash build-tools/set-version.sh 2026.2 5
+bash build-tools/update-changelog.sh 2026.2 notes.txt
 ```
 
-**Verify versions are in sync**:
+**Verify version sync**:
 ```bash
 bash scripts/check-version.sh
 ```
 
-## Manual installation
-
-After building the ZIP you can install it directly with Magisk:
-
-```bash
-magisk --install-module path/to/magisk-samsung-dex-standalone-mode.zip
-```
-
-
-## Issues
-
-#### *"I'm having issues with gestures after exiting DeX"* or similar
-
-See [Issue 2](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/issues/2)
-
-#### *"DeX is ignoring the notch", "Bar and DeX desktop doesn't go all the way"* or similar
-
-See [Issue 3](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/issues/3)
-
-##### Possible fix
-*TLDR:* Change cutout simulation to double cutout, thanks to [@admiralsym](https://github.com/admiralsym)
-
-Generic instructions on how to change the display cutout setting
-
-- Enable Developer Options (If Not Already Enabled)
-  - Go to Settings > About phone.
-  - Tap Software information.
-  - Tap Build number seven times until you see "Developer mode has been enabled."
-- Open Developer Options
-  - Go back to Settings.
-  - Scroll down and select Developer options.
-- Change the Display Cutout Setting
-  - Scroll down and find Simulate display with a cutout.
-  - Tap it and select Double cutout.
-
-#### *"Can't install zip", "Have an unzip error"* or similar
-
-See [Issue 4](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode/issues/4)
-
-##### Possible fix
-*TLDR:* Use termux to manually install zip, thanks to [@hzykiss](https://github.com/hzykiss) 
-
-- Use a terminal emulator like termux.
-- Do su to get root privileges.
-- Run magisk --install-module full_path_of_the_module.zip to install the module manually.
-
-## Questions & Answers
-
-Thanks to [@WilsonBradley](https://github.com/WilsonBradley) and [@foxypiratecove37350](https://github.com/foxypiratecove37350) for their questions, adapted for comprehension.
-
-**Q. Does this require a Samsung device?**
-- **A.** Yes, it does indeed, a Samsung but more precisely a Samsung One UI based ROM with DeX in it.
-
-**Q. By "Standalone mode" - does this mean DeX can be started on device itself at will (no HDMI connection required)?**
-- **A.** YES, this what the module actually pretends to solve.
-
-**Q. Could DeX be screen shared to another Android device?**
-- **A.** No, not by using this module in itself. This is a Android/DeX specific question but my guess is no, if you know better open an issue.
-
-**Q. Can it work on non-Samsung devices, or Samsung devices that don't support DeX?**
-- **A.** Short is answer no. Long answer is any Samsung based ROM that has DeX can be used somehow, not at my level of interest though.
-
-**Q. Can it work if the Samsung device has a custom ROM?**
-- **A.** Maybe. That will depend if the custom ROM you're using is stock/One UI based and has DeX it will work.
-
-**Q. What are the requirements to run this?**
-- **A.** Please check "module requirements" for more information.
-
-**Q. Will this add DeX to my phone?**
-- **A.** No. This only activates standalone mode on phones that already have DeX.
-
-**Q. I have the S23 Ultra or some other high-end Samsung phone, will standalone work by itself without the module?**
-- **A.** No. Standalone mode is made mostly for bigger screens not phone screens.
-
 ## Changelog
 
-2026.1
-- Add support for older phones such as S9, 10, Note 9 that use "system-as-root" partition layout thanks to [@serifpersia](https://github.com/serifpersia)
+### 2026.1
+- Add support for older phones (S9, S10, Note 9) with "system-as-root" partition layout — *thanks to [@serifpersia](https://github.com/serifpersia)*
 - Minor fixes
 
-2025.1
-- Add release automation script
+### 2025.1
+- Add release automation scripts
 - Resolve shellcheck warnings
 
-2024.2
-- Build/debug scripts restructured
-- Module status bug fix, kept adding onto olders statuses on reboot
+### 2024.2
+- Restructure build/debug scripts
+- Fix module status bug (was appending to old statuses on reboot)
 
-2024.1
+### 2024.1
 - Initial release
-
-## Warranty
-
-No warranties whatsoever.
 
 ## License
 
-MIT License, check `license.md`.
+MIT License — see [license.md](license.md)
+
+**No warranties whatsoever.**
