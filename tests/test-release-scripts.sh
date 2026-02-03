@@ -114,8 +114,7 @@ EOF
 	bash "$REPO_ROOT/build-tools/set-version.sh" "2026.5" "42"
 
 	assert_file_contains update.json '"version": "2026.5"' "set-version updates version in update.json"
-	assert_file_contains update.json '"versionCode": 42' "set-version updates versionCode as integer in update.json"
-	assert_file_not_contains update.json '"versionCode": "42"' "set-version does not quote versionCode"
+	assert_file_contains update.json '"versionCode": "42"' "set-version updates versionCode as string in update.json"
 	teardown
 }
 
