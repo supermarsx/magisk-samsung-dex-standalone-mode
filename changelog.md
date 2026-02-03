@@ -9,7 +9,7 @@ Check [module github page](https://github.com/supermarsx/magisk-samsung-dex-stan
 ## Changelog:
 
 2026.1
-- Add support for older phones such as S9, 10, Note 9 that use "system-as-root" partition layout
+- Add support for older phones such as S9, 10, Note 9 that use "system-as-root" partition layout thanks to [@serifpersia](https://github.com/serifpersia)
 - Minor fixes
 
 2025.1
