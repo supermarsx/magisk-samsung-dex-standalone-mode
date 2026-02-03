@@ -1,4 +1,21 @@
 #!/usr/bin/env bash
+#
+# set-version.sh - Update version numbers in module.prop and update.json
+#
+# Usage: ./set-version.sh <version> <versionCode>
+#
+# Arguments:
+#   version     - The version string (e.g., "2026.1")
+#   versionCode - The numeric version code (e.g., "4")
+#
+# This script updates both module.prop and update.json to keep version
+# information synchronized. The versionCode is stored as a quoted string
+# in update.json as required by Magisk.
+#
+# Examples:
+#   ./set-version.sh 2026.1 4
+#   ./set-version.sh 2026.2 5
+#
 set -euo pipefail
 
 if [ $# -ne 2 ]; then

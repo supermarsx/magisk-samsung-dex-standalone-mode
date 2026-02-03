@@ -1,4 +1,21 @@
 #!/bin/bash
+#
+# build-and-commit.sh - Auto-increment version, build, commit, and tag
+#
+# Usage: ./build-and-commit.sh
+#
+# This script automatically:
+#   1. Calculates the next version based on current year and increment
+#   2. Updates module.prop and update.json with new version
+#   3. Builds the module ZIP
+#   4. Commits changes and creates a git tag
+#
+# Version format: YYYY.N where YYYY is the current year and N is an
+# incrementing counter that resets to 1 each new year.
+#
+# Note: This script does NOT update the changelog. For full releases
+# with changelog updates, use build-tools/release.sh instead.
+#
 set -euo pipefail
 
 PROP_FILE="module.prop"

@@ -1,4 +1,15 @@
 #!/bin/bash
+#
+# check-version.sh - Verify version consistency between module.prop and update.json
+#
+# Usage: ./check-version.sh
+#
+# This script compares the version and versionCode values in module.prop
+# and update.json to ensure they are synchronized. It exits with code 0
+# if versions match, or code 1 if there are mismatches.
+#
+# Used in CI pipelines and before releases to catch version inconsistencies.
+#
 set -uo pipefail
 
 PROP_FILE="module.prop"

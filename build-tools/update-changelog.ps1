@@ -1,3 +1,21 @@
+<#
+.SYNOPSIS
+    Prepend a new version entry to changelog.md
+
+.DESCRIPTION
+    This script prepends a new changelog entry with the version number,
+    current date, and the contents of the notes file to changelog.md.
+    The existing changelog content is preserved below the new entry.
+
+.PARAMETER Version
+    The version string (e.g., "2026.1")
+
+.PARAMETER NotesFile
+    Path to a file containing release notes
+
+.EXAMPLE
+    .\update-changelog.ps1 -Version "2026.1" -NotesFile "notes.txt"
+#>
 param(
     [Parameter(Mandatory = $true)][string]$Version,
     [Parameter(Mandatory = $true)][string]$NotesFile
