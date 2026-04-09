@@ -13,12 +13,35 @@ module_name="samsung-dex-standalone-mode"
 module_path="/data/adb/modules"
 floating_feature_xml_file="floating_feature.xml"
 
-# Check for correct floating_feature.xml path
+# Build list of all existing floating_feature.xml paths
+floating_feature_xml_paths=""
 if [ -f "/system/vendor/etc/floating_feature.xml" ]; then
-	floating_feature_xml_dir="/system/vendor/etc/"
-elif [ -f "/vendor/etc/floating_feature.xml" ]; then
-	floating_feature_xml_dir="/vendor/etc/"
+	floating_feature_xml_paths="/system/vendor/etc/"
+	ui_print " [INFO] Found floating_feature.xml at '/system/vendor/etc/'."
 else
+	ui_print " [INFO] Not found floating_feature.xml at '/system/vendor/etc/'."
+fi
+if [ -f "/vendor/etc/floating_feature.xml" ]; then
+	floating_feature_xml_paths="$floating_feature_xml_paths /vendor/etc/"
+	ui_print " [INFO] Found floating_feature.xml at '/vendor/etc/'."
+else
+	ui_print " [INFO] Not found floating_feature.xml at '/vendor/etc/'."
+fi
+if [ -f "/system/etc/floating_feature.xml" ]; then
+	floating_feature_xml_paths="$floating_feature_xml_paths /system/etc/"
+	ui_print " [INFO] Found floating_feature.xml at '/system/etc/'."
+else
+	ui_print " [INFO] Not found floating_feature.xml at '/system/etc/'."
+fi
+
+# Use first found path as the primary source
+floating_feature_xml_dir=""
+for fpath in $floating_feature_xml_paths; do
+	floating_feature_xml_dir="$fpath"
+	break
+done
+# Fallback if none found
+if [ -z "$floating_feature_xml_dir" ]; then
 	floating_feature_xml_dir="/system/etc/"
 fi
 
@@ -155,11 +178,23 @@ install_exists() {
 }
 
 # floating_feature_file_exists()
-#   Check if floating feature file exists
+#   Check if floating feature file exists at any known path
 floating_feature_file_exists() {
-	fffe_filepath="$floating_feature_xml_fullpath"
-
-	if filepath_exists "$fffe_filepath"; then
+	fffe_found=false
+	for fffe_dir in $floating_feature_xml_paths; do
+		fffe_filepath="$fffe_dir$floating_feature_xml_file"
+		if filepath_exists "$fffe_filepath"; then
+			fffe_found=true
+		fi
+	done
+	# Also check fallback path if no paths were detected
+	if [ "$fffe_found" = false ]; then
+		fffe_filepath="$floating_feature_xml_fullpath"
+		if filepath_exists "$fffe_filepath"; then
+			fffe_found=true
+		fi
+	fi
+	if [ "$fffe_found" = true ]; then
 		ui_print " [INFO] Passed floating features file exists."
 	else
 		ui_print " [ERR!] Failed floating features file exists."
@@ -169,12 +204,17 @@ floating_feature_file_exists() {
 }
 
 # floating_feature_file_key_exists()
-#   Check if floating feature file key exists
+#   Check if floating feature file key exists at any known path
 floating_feature_file_key_exists() {
-	fffke_filepath="$floating_feature_xml_fullpath"
 	fffke_key="$floating_feature_xml_dex_key"
-
-	if file_key_exists "$fffke_filepath" "$fffke_key"; then
+	fffke_found=false
+	for fffke_dir in $floating_feature_xml_paths; do
+		fffke_filepath="$fffke_dir$floating_feature_xml_file"
+		if file_key_exists "$fffke_filepath" "$fffke_key"; then
+			fffke_found=true
+		fi
+	done
+	if [ "$fffke_found" = true ]; then
 		ui_print " [INFO] Passed floating feature key check."
 	else
 		ui_print " [ERR!] Failed floating features key check."
@@ -184,13 +224,20 @@ floating_feature_file_key_exists() {
 }
 
 # floating_feature_already_enabled()
-#   Check if floating feature has standalone already enabled
+#   Check if floating feature has standalone already enabled at all known paths
 floating_feature_already_enabled() {
-	ffae_filepath="$floating_feature_xml_fullpath"
 	ffae_key="$floating_feature_xml_dex_key"
 	ffae_value="$floating_feature_xml_dex_key_value"
-
-	if file_key_contains_value "$ffae_filepath" "$ffae_key" "$ffae_value"; then
+	ffae_all_enabled=true
+	ffae_checked=false
+	for ffae_dir in $floating_feature_xml_paths; do
+		ffae_filepath="$ffae_dir$floating_feature_xml_file"
+		ffae_checked=true
+		if ! file_key_contains_value "$ffae_filepath" "$ffae_key" "$ffae_value"; then
+			ffae_all_enabled=false
+		fi
+	done
+	if [ "$ffae_checked" = true ] && [ "$ffae_all_enabled" = true ]; then
 		ui_print " [ERR!] Failed floating features key value check."
 		ui_print " [INFO] Floating features has DeX standalone mode already enabled."
 		install_cancel

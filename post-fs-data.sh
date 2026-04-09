@@ -9,12 +9,26 @@ module_prop_file="module.prop"
 module_prop_fullpath="$module_dir$module_prop_file"
 floating_feature_xml_file="floating_feature.xml"
 
-# Check for correct floating_feature.xml path
+# Build list of all existing floating_feature.xml paths to mount
+floating_feature_xml_paths=""
 if [ -f "/system/vendor/etc/floating_feature.xml" ]; then
-	floating_feature_xml_dir="/system/vendor/etc/"
-elif [ -f "/vendor/etc/floating_feature.xml" ]; then
-	floating_feature_xml_dir="/vendor/etc/"
-else
+	floating_feature_xml_paths="/system/vendor/etc/"
+fi
+if [ -f "/vendor/etc/floating_feature.xml" ]; then
+	floating_feature_xml_paths="$floating_feature_xml_paths /vendor/etc/"
+fi
+if [ -f "/system/etc/floating_feature.xml" ]; then
+	floating_feature_xml_paths="$floating_feature_xml_paths /system/etc/"
+fi
+
+# Use first found path as the primary source for patching
+floating_feature_xml_dir=""
+for fpath in $floating_feature_xml_paths; do
+	floating_feature_xml_dir="$fpath"
+	break
+done
+# Fallback if none found
+if [ -z "$floating_feature_xml_dir" ]; then
 	floating_feature_xml_dir="/system/etc/"
 fi
 
@@ -471,10 +485,25 @@ post_fs_process() {
 
 	echo " [INFO] Starting patching process" >"$logfile"
 
+	# Log path detection results
+	for pfp_check_path in /system/vendor/etc/ /vendor/etc/ /system/etc/; do
+		if [ -f "${pfp_check_path}${floating_feature_xml_file}" ]; then
+			echo " [INFO] Found $floating_feature_xml_file at '$pfp_check_path'." >>"$logfile"
+		else
+			echo " [INFO] Not found $floating_feature_xml_file at '$pfp_check_path'." >>"$logfile"
+		fi
+	done
+	echo " [INFO] Primary patching source: '$pfp_original_filepath'." >>"$logfile"
+
 	module_set_message ""
 	if file_set_xml_key "$pfp_original_filepath" "$pfp_patched_filepath" "$pfp_key" "$pfp_value"; then
 		set_permissions "$pfp_patched_filepath"
-		mount_file "$pfp_patched_filepath" "$pfp_original_filepath"
+		# Mount to all locations where floating_feature.xml exists
+		for pfp_mount_dir in $floating_feature_xml_paths; do
+			pfp_mount_target="$pfp_mount_dir$floating_feature_xml_file"
+			echo " [INFO] Mounting patched file to '$pfp_mount_target'." >>"$logfile"
+			mount_file "$pfp_patched_filepath" "$pfp_mount_target"
+		done
 	fi
 
 	module_set_status
