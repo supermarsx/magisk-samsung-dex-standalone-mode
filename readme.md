@@ -62,6 +62,8 @@ Check the patched value with root access:
 su -c "cat /system/etc/floating_feature.xml | grep DEX_MODE"
 ```
 
+On some devices the file may be at `/system/vendor/etc/` or `/vendor/etc/` instead. The module automatically detects and patches all locations.
+
 ## Troubleshooting
 
 ### Gesture Issues After Exiting DeX
@@ -200,7 +202,7 @@ Releases are automated via GitHub Actions when a tag is pushed.
 
 **Full release** (recommended):
 ```bash
-VERSION=2026.2 VERSION_CODE=5 CHANGELOG_NOTES_FILE=notes.txt bash build-tools/release.sh
+VERSION=2026.3 VERSION_CODE=6 CHANGELOG_NOTES_FILE=notes.txt bash build-tools/release.sh
 ```
 
 **Auto-increment release**:
@@ -210,8 +212,8 @@ bash scripts/build-and-commit.sh
 
 **Manual version update**:
 ```bash
-bash build-tools/set-version.sh 2026.2 5
-bash build-tools/update-changelog.sh 2026.2 notes.txt
+bash build-tools/set-version.sh 2026.3 6
+bash build-tools/update-changelog.sh 2026.3 notes.txt
 ```
 
 **Verify version sync**:
@@ -220,6 +222,12 @@ bash scripts/check-version.sh
 ```
 
 ## Changelog
+
+### 2026.2
+- Fix patching on devices where `floating_feature.xml` exists at multiple paths (e.g. Galaxy S20+) — *thanks to [@parkerlreed](https://github.com/parkerlreed)*
+- Mount patched file to all detected locations instead of only the first one found
+- Add path detection logging for easier debugging
+- Installation checks now validate across all known paths
 
 ### 2026.1
 - Add support for older phones (S9, S10, Note 9) with "system-as-root" partition layout — *thanks to [@serifpersia](https://github.com/serifpersia)*
