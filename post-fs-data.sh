@@ -507,10 +507,10 @@ post_fs_process() {
 			pfp_mount_target="$pfp_mount_dir$floating_feature_xml_file"
 			pfp_resolved=$(readlink -f "$pfp_mount_target" 2>/dev/null || echo "$pfp_mount_target")
 			case " $pfp_mounted_paths " in
-				*" $pfp_resolved "*)
-					echo " [INFO] Skipping '$pfp_mount_target' (already mounted via '$pfp_resolved')." >>"$logfile"
-					continue
-					;;
+			*" $pfp_resolved "*)
+				echo " [INFO] Skipping '$pfp_mount_target' (already mounted via '$pfp_resolved')." >>"$logfile"
+				continue
+				;;
 			esac
 			pfp_mounted_paths="$pfp_mounted_paths $pfp_resolved"
 			echo " [INFO] Mounting patched file to '$pfp_mount_target'." >>"$logfile"

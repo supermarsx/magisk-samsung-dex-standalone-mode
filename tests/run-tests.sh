@@ -565,12 +565,12 @@ mkdir -p /tmp/dedup_real /tmp/dedup_link
 readlink() {
 	if [ "$1" = "-f" ]; then
 		case "$2" in
-			*/dedup_link/*)
-				printf '%s\n' "${2/dedup_link/dedup_real}"
-				;;
-			*)
-				command readlink "$@"
-				;;
+		*/dedup_link/*)
+			printf '%s\n' "${2/dedup_link/dedup_real}"
+			;;
+		*)
+			command readlink "$@"
+			;;
 		esac
 	else
 		command readlink "$@"
