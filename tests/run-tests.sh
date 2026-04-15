@@ -55,7 +55,6 @@ module_name="samsung-dex-standalone-mode"
 floating_feature_xml_file="floating_feature.xml"
 floating_feature_xml_patched_file="floating_feature.xml.patched"
 floating_feature_xml_dir="/tmp/"
-floating_feature_xml_paths="/tmp/"
 floating_feature_xml_fullpath="${floating_feature_xml_dir}${floating_feature_xml_file}"
 # shellcheck disable=SC2034
 floating_feature_xml_original_fullpath="$floating_feature_xml_fullpath"
@@ -75,7 +74,6 @@ post_fs_process_wrapper() {
 	logfile="/tmp/test.log"
 	export module_log_file_fullpath="$logfile"
 	floating_feature_xml_dir="/tmp/"
-	floating_feature_xml_paths="/tmp/"
 	floating_feature_xml_fullpath="${floating_feature_xml_dir}${floating_feature_xml_file}"
 	floating_feature_xml_patched_fullpath="${module_dir}${floating_feature_xml_patched_file}"
 	mkdir -p "$module_dir"
@@ -527,117 +525,6 @@ else
 	failure=1
 fi
 CP_RC=0
-
-# Test mount deduplication with overlapping paths
-# Simulates Samsung devices where /system/vendor/etc/ and /vendor/etc/
-# resolve to the same filesystem location
-
-mount_call_count=0
-mount() {
-	mount_call_count=$((mount_call_count + 1))
-	return "${MOUNT_RC:-0}"
-}
-
-post_fs_process_dedup_wrapper() {
-	module_dir="$module_path/$module_name/"
-	logfile="/tmp/test.log"
-	export module_log_file_fullpath="$logfile"
-	floating_feature_xml_dir="$1"
-	floating_feature_xml_paths="$2"
-	floating_feature_xml_fullpath="${floating_feature_xml_dir}${floating_feature_xml_file}"
-	floating_feature_xml_patched_fullpath="${module_dir}${floating_feature_xml_patched_file}"
-	mkdir -p "$module_dir"
-	echo "<${floating_feature_xml_dex_key}>base</${floating_feature_xml_dex_key}>" >"$floating_feature_xml_fullpath"
-	echo "description=" >"$module_prop_fullpath"
-	error_count=0
-	error_message=""
-	mount_call_count=0
-	rm -f "$floating_feature_xml_patched_fullpath"
-	: >"$logfile"
-	post_fs_process
-}
-
-# Duplicate paths via simulated symlink should only mount once
-# Mock readlink to simulate /vendor/etc/ resolving to /system/vendor/etc/
-# as it does on real Samsung devices
-rm -rf /tmp/dedup_real /tmp/dedup_link
-mkdir -p /tmp/dedup_real /tmp/dedup_link
-readlink() {
-	if [ "$1" = "-f" ]; then
-		case "$2" in
-		*/dedup_link/*)
-			printf '%s\n' "${2/dedup_link/dedup_real}"
-			;;
-		*)
-			command readlink "$@"
-			;;
-		esac
-	else
-		command readlink "$@"
-	fi
-}
-MOUNT_RC=0
-CP_RC=0
-post_fs_process_dedup_wrapper "/tmp/dedup_real/" "/tmp/dedup_real/ /tmp/dedup_link/"
-if [ "$mount_call_count" -eq 1 ]; then
-	echo "PASSED: dedup mounts once for overlapping paths"
-else
-	echo "FAILED: dedup mounts once for overlapping paths (got $mount_call_count)"
-	failure=1
-fi
-if grep -q 'Skipping' /tmp/test.log; then
-	echo "PASSED: dedup logs skip message for overlapping path"
-else
-	echo "FAILED: dedup logs skip message for overlapping path"
-	failure=1
-fi
-unset -f readlink
-rm -rf /tmp/dedup_real /tmp/dedup_link
-
-# Distinct paths should mount to each one
-rm -rf /tmp/dedup_a /tmp/dedup_b
-mkdir -p /tmp/dedup_a /tmp/dedup_b
-MOUNT_RC=0
-CP_RC=0
-post_fs_process_dedup_wrapper "/tmp/dedup_a/" "/tmp/dedup_a/ /tmp/dedup_b/"
-if [ "$mount_call_count" -eq 2 ]; then
-	echo "PASSED: dedup mounts both for distinct paths"
-else
-	echo "FAILED: dedup mounts both for distinct paths (got $mount_call_count)"
-	failure=1
-fi
-if ! grep -q 'Skipping' /tmp/test.log; then
-	echo "PASSED: dedup no skip for distinct paths"
-else
-	echo "FAILED: dedup no skip for distinct paths"
-	failure=1
-fi
-rm -rf /tmp/dedup_a /tmp/dedup_b
-
-# Single path should mount once with no skips
-rm -rf /tmp/dedup_single
-mkdir -p /tmp/dedup_single
-MOUNT_RC=0
-CP_RC=0
-post_fs_process_dedup_wrapper "/tmp/dedup_single/" "/tmp/dedup_single/"
-if [ "$mount_call_count" -eq 1 ]; then
-	echo "PASSED: dedup single path mounts once"
-else
-	echo "FAILED: dedup single path mounts once (got $mount_call_count)"
-	failure=1
-fi
-if ! grep -q 'Skipping' /tmp/test.log; then
-	echo "PASSED: dedup single path no skip"
-else
-	echo "FAILED: dedup single path no skip"
-	failure=1
-fi
-rm -rf /tmp/dedup_single
-
-# Restore original mount mock
-mount() {
-	return "${MOUNT_RC:-0}"
-}
 
 # Build module creation test
 assert_return 0 tests/test-build-create-module.sh
