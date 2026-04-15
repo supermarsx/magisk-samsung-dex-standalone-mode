@@ -499,8 +499,20 @@ post_fs_process() {
 	if file_set_xml_key "$pfp_original_filepath" "$pfp_patched_filepath" "$pfp_key" "$pfp_value"; then
 		set_permissions "$pfp_patched_filepath"
 		# Mount to all locations where floating_feature.xml exists
+		# Deduplicate resolved paths to avoid double-mounting when
+		# paths like /system/vendor/etc/ and /vendor/etc/ point to
+		# the same underlying filesystem location
+		pfp_mounted_paths=""
 		for pfp_mount_dir in $floating_feature_xml_paths; do
 			pfp_mount_target="$pfp_mount_dir$floating_feature_xml_file"
+			pfp_resolved=$(readlink -f "$pfp_mount_target" 2>/dev/null || echo "$pfp_mount_target")
+			case " $pfp_mounted_paths " in
+				*" $pfp_resolved "*)
+					echo " [INFO] Skipping '$pfp_mount_target' (already mounted via '$pfp_resolved')." >>"$logfile"
+					continue
+					;;
+			esac
+			pfp_mounted_paths="$pfp_mounted_paths $pfp_resolved"
 			echo " [INFO] Mounting patched file to '$pfp_mount_target'." >>"$logfile"
 			mount_file "$pfp_patched_filepath" "$pfp_mount_target"
 		done

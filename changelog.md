@@ -2,11 +2,15 @@
 
 ### New version available 
 
-Version: 2026.2
+Version: 2026.3
 
 Check [module github page](https://github.com/supermarsx/magisk-samsung-dex-standalone-mode)
 
 ## Changelog:
+
+2026.3
+- Hotfix: deduplicate mount targets to prevent double bind-mount race condition on devices where paths like /system/vendor/etc/ and /vendor/etc/ resolve to the same filesystem location
+- Add mount deduplication tests
 
 2026.2
 - Fix patching on devices where floating_feature.xml exists at multiple paths (e.g. Galaxy S20+) thanks to [@parkerlreed](https://github.com/parkerlreed)
