@@ -1,6 +1,6 @@
 # magisk-samsung-dex-standalone-mode
 
-Magisk module to systemlessly enable Samsung DeX standalone mode by patching `floating_feature.xml`, it adds `standalone` value to `SEC_FLOATING_FEATURE_COMMON_CONFIG_DEX_MODE` key.
+Magisk module to systemlessly enable Samsung DeX standalone mode by patching `floating_feature.xml`, it adds `standalone` value to `SEC_FLOATING_FEATURE_COMMON_CONFIG_DEX_MODE` key. Works on One UI prior to version 8.
 
 ✅ Enables DeX standalone mode on supported phones.
 
@@ -136,6 +136,13 @@ No. This only enables standalone mode on phones that already have DeX.
 
 No. Standalone mode isn't enabled by default on any Samsung phone, regardless of how high-end it is.
 </details>
+
+<details>
+<summary><strong>Will this work on OneUI 8?</strong></summary>
+
+Apparently not, as reported by @[DudeThat](https://github.com/ThisDudeIsDoingCode), so i'm not using OneUI 8 with root at the time and won't be working on it for the foreseeable future. If you have any new point it out in an issue and I might look at it.
+</details>
+
 
 *Thanks to [@WilsonBradley](https://github.com/WilsonBradley) and [@foxypiratecove37350](https://github.com/foxypiratecove37350) for their questions.*
 
